@@ -1,5 +1,5 @@
 Settings:
-  Title: <black>Opening %crate_name%</black>
+  Title: <#3A3A3A>Đang mở </#3A3A3A>%crate_name%
   Size: 45
   Inventory_Type: CHEST
   Auto_Refresh: 0
@@ -24,7 +24,7 @@ Content:
     Priority: 10
     Item:
       Material: LIME_STAINED_GLASS_PANE
-      Name: <green><b>Spin!</b></green>
+      Name: <#7CFC9A>Quay</#7CFC9A>
     Type: start
   
   background:
@@ -66,7 +66,7 @@ Animations:
     Items:
       black:
         Material: PLAYER_HEAD
-        Name: <light_red><b>YOUR PRIZE →</b></light_red>
+        Name: <#FF8A8A>Phần thưởng →</#FF8A8A>
         SkinURL: a6af217aeddf0f40064969ebb2042f7aeafbc7d0f175a27624133a3befd10281
   
   win_arrow2:
@@ -78,5 +78,5 @@ Animations:
     Items:
       black:
         Material: PLAYER_HEAD
-        Name: <light_red><b>← YOUR PRIZE</b></light_red>
+        Name: <#FF8A8A>← Phần thưởng</#FF8A8A>
         SkinURL: 1c5a8aa8a4c03600a2b5a4eb6beb51d590260b095ee1cdaa976b09bdfe5661c6

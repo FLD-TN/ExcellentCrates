@@ -1,0 +1,101 @@
+# BoxPvP - ExcellentCrates (tiếng Việt)
+# File này chỉ chứa phần dịch chung của nightcore. Các dòng còn lại của ExcellentCrates
+# được plugin tự thêm vào (mặc định đã là tiếng Việt).
+Command:
+  Argument:
+    Type:
+      Required: '<#FF8A8A><%name%></#FF8A8A>'
+      Optional: '<#FFD166>[%name%]</#FFD166>'
+    Name:
+      Generic: 'giá trị'
+      Type: 'loại'
+      Name: 'tên'
+      Player: 'người chơi'
+      World: 'thế giới'
+      Amount: 'số lượng'
+      Material: 'vật liệu'
+      ItemMaterial: 'loại item'
+      BlockMaterial: 'loại block'
+      Enchantment: 'phù phép'
+  Flag:
+    Format: '<#AAAAAA>[%name%]</#AAAAAA>'
+  Help:
+    List:
+    - '<noprefix>'
+    - ' '
+    - '  <#FFD166>%name%</#FFD166><#AAAAAA> - lệnh:</#AAAAAA>'
+    - ' '
+    - '  <#FF8A8A><></#FF8A8A><#AAAAAA> bắt buộc, </#AAAAAA><#7CFC9A>[]</#7CFC9A><#AAAAAA> không bắt buộc</#AAAAAA>'
+    - ' '
+    - '%entry%'
+    - ' '
+    Entry: '  <#FFD166>/%command_label%</#FFD166> <#FFB86B>%command_usage%</#FFB86B><#AAAAAA> - %command_description%</#AAAAAA>'
+    Desc: 'Xem danh sách lệnh.'
+  CheckPerm:
+    Desc: 'Xem quyền của người chơi.'
+  Reload:
+    Desc: 'Tải lại plugin.'
+    Done: '<#7CFC9A>✔ </#7CFC9A><#BFC7D5>Đã tải lại plugin</#BFC7D5>'
+Time:
+  Day: '%amount% ngày'
+  Hour: '%amount% giờ'
+  Min: '%amount% phút'
+  Sec: '%amount% giây'
+  Delimiter: ' '
+Other:
+  'Yes': '<#7CFC9A>Có</#7CFC9A>'
+  'No': '<#FF8A8A>Không</#FF8A8A>'
+  Enabled: '<#7CFC9A>Bật</#7CFC9A>'
+  Disabled: '<#FF8A8A>Tắt</#FF8A8A>'
+  Any: 'Bất kỳ'
+  None: 'Không có'
+  Never: 'Không bao giờ'
+  OneTimed: 'Một lần'
+  Unlimited: 'Không giới hạn'
+  Infinity: '∞'
+Entry:
+  Good: '<#7CFC9A>✔</#7CFC9A> <#AAAAAA>%entry%</#AAAAAA>'
+  Bad: '<#FF6B6B>✘</#FF6B6B> <#AAAAAA>%entry%</#AAAAAA>'
+  Warn: '<#FFD166>(!)</#FFD166> <#AAAAAA>%entry%</#AAAAAA>'
+Error:
+  Invalid_Player: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Không tìm thấy người chơi</#BFC7D5>'
+  Invalid_World: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Không tìm thấy thế giới</#BFC7D5>'
+  Invalid_Number: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Số không hợp lệ</#BFC7D5>'
+  InvalidMaterial: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Vật liệu không hợp lệ</#BFC7D5>'
+  InvalidEnchantment: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Phù phép không hợp lệ</#BFC7D5>'
+  NoPermission: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Bạn không có quyền làm việc này</#BFC7D5>'
+  Command:
+    ParseFlag: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Giá trị <#FF8A8A>%value%</#FF8A8A> không hợp lệ cho cờ <#FF8A8A>%name%</#FF8A8A></#BFC7D5>'
+    ParseArgument: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Giá trị <#FF8A8A>%value%</#FF8A8A> không hợp lệ cho <#FF8A8A>%name%</#FF8A8A></#BFC7D5>'
+    Argument:
+      InvalidPlayer: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Không tìm thấy người chơi <#FF8A8A>%value%</#FF8A8A></#BFC7D5>'
+      InvalidWorld: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Không tìm thấy thế giới <#FF8A8A>%value%</#FF8A8A></#BFC7D5>'
+      InvalidNumber: '<#FF6B6B>✘ </#FF6B6B><#FF8A8A>%value%</#FF8A8A><#BFC7D5> không phải số hợp lệ</#BFC7D5>'
+      InvalidMaterial: '<#FF6B6B>✘ </#FF6B6B><#FF8A8A>%value%</#FF8A8A><#BFC7D5> không phải vật liệu hợp lệ</#BFC7D5>'
+      InvalidEnchantment: '<#FF6B6B>✘ </#FF6B6B><#FF8A8A>%value%</#FF8A8A><#BFC7D5> không phải phù phép hợp lệ</#BFC7D5>'
+    NotYourself: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Không thể dùng lệnh này lên chính mình</#BFC7D5>'
+    PlayerOnly: '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Lệnh này chỉ dành cho người chơi</#BFC7D5>'
+    Usage:
+    - '<noprefix>'
+    - '<#FF6B6B>✘ </#FF6B6B><#BFC7D5>Sai cú pháp, dùng: </#BFC7D5><#FFD166>/%command_label%</#FFD166> <#FFB86B>%command_usage%</#FFB86B>'
+Editor:
+  Input:
+    Header:
+      Main: '<#7CFC9A>Nhập dữ liệu</#7CFC9A>'
+      Error: '<#FF6B6B>Lỗi</#FF6B6B>'
+    Error:
+      NotInteger: '<#BFC7D5>Cần nhập <#FF8A8A>số nguyên</#FF8A8A></#BFC7D5>'
+      Generic: '<#BFC7D5>Giá trị không hợp lệ</#BFC7D5>'
+  Generic:
+    Close:
+      Name: '<#FF8A8A>Đóng</#FF8A8A>'
+      Lore: []
+    Return:
+      Name: '<#AAAAAA>Quay lại</#AAAAAA>'
+      Lore: []
+    NextPage:
+      Name: '<#7FDBFF>Trang sau</#7FDBFF>'
+      Lore: []
+    PreviousPage:
+      Name: '<#7FDBFF>Trang trước</#7FDBFF>'
+      Lore: []

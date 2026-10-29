@@ -13,7 +13,7 @@ public class VaultEconomyHandler implements CurrencyHandler {
     @Override
     @NotNull
     public String getDefaultName() {
-        return "Money";
+        return "Tiền";
     }
 
     @Override

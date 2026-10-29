@@ -1,5 +1,5 @@
 Settings:
-  Title: <black>Opening %crate_name%</black>
+  Title: <#3A3A3A>Đang mở </#3A3A3A>%crate_name%
   Size: 27
   Inventory_Type: CHEST
   Auto_Refresh: 0

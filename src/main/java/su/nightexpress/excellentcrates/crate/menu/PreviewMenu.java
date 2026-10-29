@@ -5,6 +5,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
+import su.nightexpress.excellentcrates.config.Ui;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 import su.nightexpress.excellentcrates.crate.impl.CrateSource;
 import su.nightexpress.excellentcrates.crate.impl.Reward;
@@ -177,7 +178,7 @@ public class PreviewMenu extends ConfigMenu<CratesPlugin> implements AutoFilled<
     @Override
     @NotNull
     protected MenuOptions createDefaultOptions() {
-        return new MenuOptions(BLACK.enclose(CRATE_NAME), MenuSize.CHEST_45);
+        return new MenuOptions(Ui.color("#3A3A3A", "Xem trước: ") + CRATE_NAME, MenuSize.CHEST_45);
     }
 
     @Override
@@ -190,23 +191,24 @@ public class PreviewMenu extends ConfigMenu<CratesPlugin> implements AutoFilled<
     protected void loadAdditional() {
         this.hideExceededRewards = ConfigValue.create("Reward.Hide_Drained_Rewards",
             true,
-            "Sets whether or not to hide rewards that player can not win anymore."
+            "Ẩn phần thưởng mà người chơi không thể trúng nữa."
         ).read(cfg);
 
         this.rewardSlots = ConfigValue.create("Reward.Slots",
             new int[] {10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34},
-            "Sets slots to display crate rewards."
+            "Các ô hiển thị phần thưởng."
         ).read(cfg);
 
         this.rewardName = ConfigValue.create("Reward.Name",
-            LIGHT_YELLOW.enclose(BOLD.enclose(REWARD_PREVIEW_NAME))
+            REWARD_PREVIEW_NAME
         ).read(cfg);
 
         this.rewardLore = ConfigValue.create("Reward.Lore.Default", Lists.newList(
             REWARD_PREVIEW_LORE,
             "",
-            LIGHT_YELLOW.enclose("▪ " + LIGHT_GRAY.enclose("Chance: ") + REWARD_ROLL_CHANCE + "%"),
-            LIGHT_YELLOW.enclose("▪ " + LIGHT_GRAY.enclose("Rarity: ") + REWARD_RARITY_NAME + " " + LIGHT_GRAY.enclose("(" + WHITE.enclose(REWARD_RARITY_ROLL_CHANCE + "%") + ")")),
+            Ui.section("Thông tin"),
+            Ui.row("Tỉ lệ ra", REWARD_ROLL_CHANCE + "%"),
+            Ui.row("Độ hiếm", REWARD_RARITY_NAME + Ui.color(Ui.DARK, " (" + REWARD_RARITY_ROLL_CHANCE + "%)")),
             "",
             WIN_LIMIT_AMOUNT,
             WIN_LIMIT_COOLDOWN,
@@ -215,19 +217,19 @@ public class PreviewMenu extends ConfigMenu<CratesPlugin> implements AutoFilled<
         )).read(cfg);
 
         this.rewardLimitAmountLore = ConfigValue.create("Reward.Lore.Win_Limit.Amount", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_GREEN.enclose("✔") + " You can win this " + LIGHT_GREEN.enclose(GENERIC_AMOUNT) + " more times.")
+            Ui.color(Ui.OK, "✔ ") + Ui.desc("Còn trúng được " + Ui.color(Ui.OK, GENERIC_AMOUNT) + " lần")
         )).read(cfg);
 
         this.rewardLimitCoolownLore = ConfigValue.create("Reward.Lore.Win_Limit.Cooldown", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_ORANGE.enclose("[❗]") + " You can win this again in " + LIGHT_ORANGE.enclose(GENERIC_TIME) + ".")
+            Ui.color(Ui.SECTION, "(!) ") + Ui.desc("Trúng lại sau " + Ui.color(Ui.SECTION, GENERIC_TIME))
         )).read(cfg);
 
         this.rewardLimitOutLore = ConfigValue.create("Reward.Lore.Win_Limit.Drained", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_RED.enclose("✘") + " Sorry, you can not win this " + LIGHT_RED.enclose("anymore") + ".")
+            Ui.color(Ui.ERROR, "✘ ") + Ui.desc("Bạn không thể trúng thêm")
         )).read(cfg);
 
         this.rewardLimitBadPermissionLore = ConfigValue.create("Reward.Lore.Win_Limit.No_Permission", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_RED.enclose("✘") + " Sorry, you can not win this.")
+            Ui.color(Ui.ERROR, "✘ ") + Ui.desc("Bạn không thể trúng phần thưởng này")
         )).read(cfg);
 
     }

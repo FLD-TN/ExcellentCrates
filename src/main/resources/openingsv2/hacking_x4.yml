@@ -1,5 +1,5 @@
 Settings:
-  Title: <black>Opening %crate_name%</black>
+  Title: <#3A3A3A>Đang mở </#3A3A3A>%crate_name%
   Size: 54
   Inventory_Type: CHEST
   Auto_Refresh: 0
@@ -42,7 +42,7 @@ Content:
     Item:
       Material: PLAYER_HEAD
       SkinURL: 87acb8b99d478ba35053e9f212acb5c55cc144840468fd0242b39f5bd75acb41
-      Name: <green><b>[X] L<o>o</o>ck<o>e</o>d R<o>e</o>wa<o>r</o>d</b></green>
+      Name: <#7CFC9A>[X] Ph<o>ầ</o>n th<o>ư</o>ởng b<o>ị</o> kh<o>ó</o>a</#7CFC9A>
   
   background:
     Slots: 0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,38,39,40,41,42,44,45,46,47,48,49,50,51,52,53
@@ -56,12 +56,12 @@ Content:
     Item:
       Material: PLAYER_HEAD
       SkinURL: 6189a6e0f4d8963044e72e7e8531ad44b2ce6293a7090f3e027c82285fdfb68c
-      Name: <light_green><b>Start Hacking!</b></light_green>
+      Name: <#7CFC9A>Bắt đầu mở khóa</#7CFC9A>
       Lore:
-      - <light_gray>This crate control panel can</light_gray>
-      - <light_gray>unlock up to <light_green>4 rewards</light_green>!</light_gray>
+      - <#BFC7D5>Bảng điều khiển này mở khóa</#BFC7D5>
+      - <#BFC7D5>tối đa </#BFC7D5><#FFD166>4 phần thưởng</#FFD166>
       - ''
-      - <light_gray>Would you be able to open all them?</light_gray>
+      - <#555555>[</#555555><#7CFC9A>Chuột trái để bắt đầu</#7CFC9A><#555555>]</#555555>
     Type: start
 
 Rewards:
@@ -150,7 +150,7 @@ Animations:
         Chance: 100.0
         Material: PLAYER_HEAD
         SkinURL: 27548362a24c0fa8453e4d93e68c5969ddbde57bf6666c0319c1ed1e84d89065
-        Name: <light_red><b>ERR#!R_)</b></light_red>
+        Name: <#FF8A8A>L#!I_)</#FF8A8A>
   
   sound_intro:
     Spin_Times: -1

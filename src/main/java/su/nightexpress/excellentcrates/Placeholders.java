@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.api.currency.Currency;
 import su.nightexpress.excellentcrates.item.CustomItemRef;
 import su.nightexpress.excellentcrates.config.Lang;
+import su.nightexpress.excellentcrates.config.Ui;
 import su.nightexpress.excellentcrates.crate.impl.*;
 import su.nightexpress.excellentcrates.key.CrateKey;
 import su.nightexpress.excellentcrates.util.CrateUtils;
@@ -30,9 +31,9 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
     public static final String WIKI_URL          = "https://nightexpress.gitbook.io/excellentcrates/";
     public static final String WIKI_PLACEHOLDERS = WIKI_URL + "utility/placeholders";
 
-    public static final String CHECK_MARK = Tags.GREEN.enclose("✔");
-    public static final String WARN_MARK  = Tags.ORANGE.enclose("[❗]");
-    public static final String CROSS_MARK = Tags.RED.enclose("✘");
+    public static final String CHECK_MARK = Ui.color(Ui.OK, "✔");
+    public static final String WARN_MARK  = Ui.color(Ui.SECTION, "(!)");
+    public static final String CROSS_MARK = Ui.color(Ui.ERROR, "✘");
 
     public static final String SKIN_NEW_CRATE  = "7a3c8c6d3aaa96363d4bef2578f1024781ea14e9d85a9dcfc0935847a6fb5c8d";
     public static final String SKIN_NEW_REWARD = "2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec";
@@ -238,13 +239,13 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(CRATE_EFFECT_MODEL, () -> StringUtil.capitalizeUnderscored(crate.getEffectModel().name().toLowerCase()))
             .add(CRATE_EFFECT_PARTICLE_NAME, () -> {
                 UniParticle particle = crate.getEffectParticle();
-                if (particle.getParticle() == null) return problem("Undefined");
+                if (particle.getParticle() == null) return problem("Chưa đặt");
 
                 return good(StringUtil.capitalizeUnderscored(particle.getParticle().name().toLowerCase()));
             })
             .add(CRATE_EFFECT_PARTICLE_DATA, () -> {
                 UniParticle particle = crate.getEffectParticle();
-                if (!CrateUtils.isSupportedParticleData(particle)) return problem("Not supported");
+                if (!CrateUtils.isSupportedParticleData(particle)) return problem("Không hỗ trợ");
 
                 Object data = particle.getData();
                 if (data instanceof BlockData blockData) {
@@ -255,7 +256,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
                 }
                 else if (data instanceof Particle.DustOptions dustOptions) {
                     Color color = dustOptions.getColor();
-                    return good("Red: " + color.getRed() + ", Green: " + color.getGreen() + ", Blue: " + color.getBlue() + ", Size: " + dustOptions.getSize());
+                    return good("Đỏ: " + color.getRed() + ", Lá: " + color.getGreen() + ", Dương: " + color.getBlue() + ", Cỡ: " + dustOptions.getSize());
                 }
                 else if (data instanceof Float f) {
                     return good(String.valueOf(f));
@@ -264,7 +265,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
                     return good(String.valueOf(i));
                 }
 
-                return problem("Not set");
+                return problem("Chưa đặt");
             })
             .add(CRATE_REWARDS_AMOUNT, () -> NumberUtil.format(crate.getRewards().size()))
             .add(CRATE_MILESTONES_AMOUNT, () -> NumberUtil.format(crate.getMilestones().size()))
@@ -272,15 +273,15 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(CRATE_INSPECT, () -> {
                 List<String> list = new ArrayList<>();
 
-                if (!crate.hasRewards()) list.add(problem("No rewards added!"));
+                if (!crate.hasRewards()) list.add(problem("Chưa có phần thưởng"));
 
                 if (crate.isKeyRequired() && crate.getKeys().isEmpty()) {
-                    list.add(problem("No keys assigned!"));
+                    list.add(problem("Chưa gán key"));
                 }
 
-                if (!crate.hasValidPreview()) list.add(warning("No preview config!"));
-                if (!crate.hasValidOpening()) list.add(warning("No opening config!"));
-                if (crate.isHologramEnabled() && !crate.hasValidHologram()) list.add(warning("Invalid hologram template!"));
+                if (!crate.hasValidPreview()) list.add(warning("Chưa có menu xem trước"));
+                if (!crate.hasValidOpening()) list.add(warning("Chưa có kiểu mở"));
+                if (crate.isHologramEnabled() && !crate.hasValidHologram()) list.add(warning("Mẫu hologram không hợp lệ"));
 
                 return String.join("\n", list);
             })
@@ -361,14 +362,14 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(REWARD_EDITOR_ITEMS, () -> {
                 return reward.getItems().stream()
                     .filter(item -> !item.getType().isAir())
-                    .map(item -> good(ItemUtil.getItemName(item) + " x" + item.getAmount())).collect(Collectors.joining("\n"));
+                    .map(item -> good("x" + item.getAmount() + " " + ItemUtil.getItemName(item))).collect(Collectors.joining("\n"));
             })
             .add(REWARD_EDITOR_COMMANDS, () -> {
                 return reward.getCommands().stream().map(Placeholders::good).collect(Collectors.joining("\n"));
             })
             .add(REWARD_INSPECT_CONTENT, () -> {
-                if (!reward.hasContent()) return problem("Reward gives nothing!");
-                return good("Reward content is present.");
+                if (!reward.hasContent()) return problem("Phần thưởng trống (không item, không lệnh)");
+                return good("Đã có nội dung");
             })
             ;
 
@@ -381,7 +382,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(MILESTONE_OPENINGS, () -> NumberUtil.format(milestone.getOpenings()))
             .add(MILESTONE_REWARD_ID, milestone::getRewardId)
             .add(MILESTONE_INSPECT_REWARD, () -> {
-                return milestone.getReward() == null ? problem("Invalid reward!") : good("Reward is correct.");
+                return milestone.getReward() == null ? problem("Phần thưởng không tồn tại") : good("Phần thưởng hợp lệ");
             });
     }
 

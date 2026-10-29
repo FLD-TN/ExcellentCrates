@@ -1,5 +1,5 @@
 Settings:
-  Title: <black>Opening %crate_name%</black>
+  Title: <#3A3A3A>Đang mở </#3A3A3A>%crate_name%
   Size: 27
   Inventory_Type: CHEST
   Auto_Refresh: 0
@@ -18,9 +18,9 @@ Settings:
     SelectedIcon:
       Material: PLAYER_HEAD
       SkinURL: 6ed2d4a43d5556d676a53a53851a63ea19ab597668b18d0800fa0fbeacec58f3
-      Name: <light_green><b>Selected Chest</b></light_green>
+      Name: <#7CFC9A>Rương đã chọn</#7CFC9A>
       Lore:
-      - <light_gray>Click to <light_green>delesect</light_green>.</light_gray>
+      - <#555555>[</#555555><#FF8A8A>Chuột trái để bỏ chọn</#FF8A8A><#555555>]</#555555>
 
 Content:
   select:
@@ -29,9 +29,11 @@ Content:
     Item:
       Material: PLAYER_HEAD
       SkinURL: f98bc63f05f6378bf29ef10e3d82acb3ceb73a720bf80f30bc576d0ad8c40cfb
-      Name: <light_green><b>Click to Select!</b></light_green>
+      Name: <#FFB86B>Rương bí ẩn</#FFB86B>
       Lore:
-      - <light_gray>You can select and open <light_green>3 chests</light_green>.</light_gray>
+      - <#BFC7D5>Chọn và mở </#BFC7D5><#FFD166>3 rương</#FFD166>
+      - ''
+      - <#555555>[</#555555><#7CFC9A>Chuột trái để chọn</#7CFC9A><#555555>]</#555555>
     Type: select
 
 Rewards:

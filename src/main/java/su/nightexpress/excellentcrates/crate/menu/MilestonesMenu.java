@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.config.Config;
+import su.nightexpress.excellentcrates.config.Ui;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 import su.nightexpress.excellentcrates.crate.impl.CrateSource;
 import su.nightexpress.excellentcrates.crate.impl.Milestone;
@@ -75,7 +76,7 @@ public class MilestonesMenu extends ConfigMenu<CratesPlugin> implements AutoFill
     @Override
     @NotNull
     protected MenuOptions createDefaultOptions() {
-        return new MenuOptions(BLACK.enclose("Crate Milestones"), MenuSize.CHEST_27);
+        return new MenuOptions(Ui.color("#3A3A3A", "Mốc mở: ") + CRATE_NAME, MenuSize.CHEST_27);
     }
 
     @Override
@@ -91,19 +92,19 @@ public class MilestonesMenu extends ConfigMenu<CratesPlugin> implements AutoFill
 
         ItemStack back = ItemUtil.getSkinHead(SKIN_ARROW_DOWN);
         ItemUtil.editMeta(back, meta -> {
-            meta.setDisplayName(CoreLang.EDITOR_ITEM_RETURN.getDefaultName());
+            meta.setDisplayName(Ui.name(Ui.LABEL, "Quay lại"));
         });
         list.add(new MenuItem(back).setSlots(22).setPriority(10).setHandler(this.returnHandler));
 
         ItemStack nextPage = ItemUtil.getSkinHead(SKIN_ARROW_RIGHT);
         ItemUtil.editMeta(nextPage, meta -> {
-            meta.setDisplayName(CoreLang.EDITOR_ITEM_NEXT_PAGE.getDefaultName());
+            meta.setDisplayName(Ui.name(Ui.ALT, "Trang sau"));
         });
         list.add(new MenuItem(nextPage).setSlots(17).setPriority(10).setHandler(ItemHandler.forNextPage(this)));
 
         ItemStack backPage = ItemUtil.getSkinHead(SKIN_ARROW_LEFT);
         ItemUtil.editMeta(backPage, meta -> {
-            meta.setDisplayName(CoreLang.EDITOR_ITEM_PREVIOUS_PAGE.getDefaultName());
+            meta.setDisplayName(Ui.name(Ui.ALT, "Trang trước"));
         });
         list.add(new MenuItem(backPage).setSlots(17).setPriority(10).setHandler(ItemHandler.forPreviousPage(this)));
 
@@ -113,26 +114,26 @@ public class MilestonesMenu extends ConfigMenu<CratesPlugin> implements AutoFill
     @Override
     protected void loadAdditional() {
         this.mileCompName = ConfigValue.create("Milestones.Completed.Name",
-            LIGHT_GREEN.enclose(BOLD.enclose(MILESTONE_OPENINGS + " Openings")) + " " + GRAY.enclose("(" + WHITE.enclose("Completed") + ")")
+            Ui.name(Ui.OK, "Mốc " + MILESTONE_OPENINGS + " lần mở", "Đã đạt")
         ).read(cfg);
 
         this.mileCompLore = ConfigValue.create("Milestones.Completed.Lore", Lists.newList(
-            LIGHT_GREEN.enclose(BOLD.enclose("Info:")),
-            LIGHT_GREEN.enclose("▪ " + LIGHT_GRAY.enclose("Reward: ") + REWARD_NAME),
+            Ui.section("Thông tin"),
+            Ui.row("Phần thưởng", REWARD_NAME),
             "",
-            LIGHT_GREEN.enclose("✔") + " " + LIGHT_GRAY.enclose("You have completed this milestone.")
+            Ui.color(Ui.OK, "✔ ") + Ui.desc("Bạn đã đạt mốc này")
         )).read(cfg);
 
         this.mileIncName = ConfigValue.create("Milestones.Incompleted.Name",
-            LIGHT_YELLOW.enclose(BOLD.enclose(MILESTONE_OPENINGS + " Openings")) + " " + GRAY.enclose("(" + WHITE.enclose("Incompleted") + ")")
+            Ui.name(Ui.C_MILE, "Mốc " + MILESTONE_OPENINGS + " lần mở", "Chưa đạt")
         ).read(cfg);
 
         this.mileIncLore = ConfigValue.create("Milestones.Incompleted.Lore", Lists.newList(
-            LIGHT_YELLOW.enclose(BOLD.enclose("Info:")),
-            LIGHT_YELLOW.enclose("▪ " + LIGHT_GRAY.enclose("Openings Left: ") + PLACEHOLDER_OPENINGS_LEFT),
-            LIGHT_YELLOW.enclose("▪ " + LIGHT_GRAY.enclose("Reward: ") + REWARD_NAME),
+            Ui.section("Thông tin"),
+            Ui.row("Còn thiếu", PLACEHOLDER_OPENINGS_LEFT + " lần mở"),
+            Ui.row("Phần thưởng", REWARD_NAME),
             "",
-            LIGHT_RED.enclose("✘") + " " + LIGHT_GRAY.enclose("You haven''t completed this milestone yet.")
+            Ui.color(Ui.ERROR, "✘ ") + Ui.desc("Bạn chưa đạt mốc này")
         )).read(cfg);
 
         this.mileSlots = ConfigValue.create("Milestones.Slots", new int[]{10,12,14,16}).read(cfg);

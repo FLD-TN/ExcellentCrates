@@ -1,5 +1,5 @@
 Settings:
-  Title: <black>Opening %crate_name%</black>
+  Title: <#3A3A3A>Đang mở </#3A3A3A>%crate_name%
   Size: 27
   Inventory_Type: CHEST
   Auto_Refresh: 0
@@ -21,14 +21,14 @@ Content:
     Slots: 22
     Item:
       Material: PLAYER_HEAD
-      Name: <cyan><b>↑ Your Reward ↑</b></cyan>
+      Name: <#7FDBFF>Phần thưởng của bạn</#7FDBFF>
       SkinURL: 77334cddfab45d75ad28e1a47bf8cf5017d2f0982f6737da22d4972952510661
   
   arrow_down:
     Slots: 4
     Item:
       Material: PLAYER_HEAD
-      Name: <cyan><b>↓ Your Reward ↓</b></cyan>
+      Name: <#7FDBFF>Phần thưởng của bạn</#7FDBFF>
       SkinURL: e7742034f59db890c8004156b727c77ca695c4399d8e0da5ce9227cf836bb8e2
 
 Rewards:

@@ -1,5 +1,5 @@
 Settings:
-  Title: <black>Opening %crate_name%</black>
+  Title: <#3A3A3A>Đang mở </#3A3A3A>%crate_name%
   Size: 27
   Inventory_Type: CHEST
   Auto_Refresh: 0
@@ -57,7 +57,7 @@ Content:
     Priority: 10
     Item:
       Material: REDSTONE_TORCH
-      Name: <light_red><b>Ignite!</b></light_red>
+      Name: <#FF8A8A>Châm ngòi</#FF8A8A>
     Type: start
   
   redstone:

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.config.Config;
+import su.nightexpress.excellentcrates.config.Ui;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 import su.nightexpress.excellentcrates.util.ClickType;
 import su.nightexpress.excellentcrates.util.InteractType;
@@ -89,7 +90,7 @@ public class CratesMenu extends ConfigMenu<CratesPlugin> {
     @Override
     @NotNull
     protected MenuOptions createDefaultOptions() {
-        return new MenuOptions(BLACK.enclose("Crates"), 27,  InventoryType.CHEST);
+        return new MenuOptions(Ui.color("#3A3A3A", "Crate"), 27,  InventoryType.CHEST);
     }
 
     @Override
@@ -105,18 +106,20 @@ public class CratesMenu extends ConfigMenu<CratesPlugin> {
         ).read(cfg);
 
         this.crateLore = ConfigValue.create("Crate.Lore", Lists.newList(
-            LIGHT_GRAY.enclose("You have " + LIGHT_YELLOW.enclose(GENERIC_KEYS) + " keys."),
+            Ui.section("Thông tin"),
+            Ui.row("Key đang có", GENERIC_KEYS),
             "",
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Left-Click to " + LIGHT_YELLOW.enclose("preview") + "."),
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Right-Click to " + LIGHT_YELLOW.enclose("open") + ".")
+            Ui.action("Chuột trái để xem trước"),
+            Ui.action("Chuột phải để mở"),
+            Ui.actionAlt("Shift + Chuột phải để mở nhanh")
         )).read(cfg);
 
         this.crateSlots = ConfigValue.forMap("Crate.Slots",
             (cfg, path, id) -> cfg.getInt(path + "." + id),
             (cfg, path, map) -> map.forEach((id, slot) -> cfg.set(path + "." + id, slot)),
             () -> Map.of("your_crate_id", 13),
-            "Put here crate IDs and slots where they will be displayed.",
-            "Crate IDs are equals to their config file names."
+            "ID crate và ô hiển thị của nó.",
+            "ID crate là tên file trong thư mục crates."
         ).read(cfg);
     }
 

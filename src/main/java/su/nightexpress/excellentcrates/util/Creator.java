@@ -7,6 +7,7 @@ import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.Placeholders;
 import su.nightexpress.excellentcrates.config.Config;
 import su.nightexpress.excellentcrates.config.Lang;
+import su.nightexpress.excellentcrates.config.Ui;
 import su.nightexpress.excellentcrates.crate.menu.PreviewMenu;
 import su.nightexpress.excellentcrates.menu.impl.CratesMenu;
 import su.nightexpress.nightcore.config.FileConfig;
@@ -57,7 +58,12 @@ public class Creator {
 
                 ItemStack milestones = ItemUtil.getSkinHead("1daf09284530ce92ed2df2a62e1b05a11f1871f85ae559042844206d66c0b5b0");
                 ItemUtil.editMeta(milestones, meta -> {
-                    meta.setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Milestones")));
+                    meta.setDisplayName(Ui.name(Ui.C_MILE, "Mốc mở crate"));
+                    meta.setLore(List.of(
+                        Ui.desc("Thưởng thêm khi mở đủ số lần."),
+                        "",
+                        Ui.action("Chuột trái để xem")
+                    ));
                 });
                 list.add(new MenuItem(milestones).setPriority(10).setSlots(4).setHandler(this.milesHandler));
 

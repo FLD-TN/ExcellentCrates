@@ -25,6 +25,7 @@ import su.nightexpress.nightcore.command.api.NightPluginCommand;
 import su.nightexpress.nightcore.command.base.ReloadSubCommand;
 import su.nightexpress.nightcore.config.PluginDetails;
 import su.nightexpress.nightcore.util.Plugins;
+import su.nightexpress.nightcore.util.text.tag.Tags;
 
 public class CratesPlugin extends NightDataPlugin<CrateUser> {
 
@@ -44,7 +45,16 @@ public class CratesPlugin extends NightDataPlugin<CrateUser> {
     @Override
     @NotNull
     protected PluginDetails getDefaultDetails() {
-        return PluginDetails.create("Crates", new String[]{"crates", "ecrates", "excellentcrates", "crate", "case", "cases"})
+        // BoxPvP: BoxCore prefix and Vietnamese locale (lang/messages_vi.yml) by default.
+        String[] letters = {"B", "o", "x", "P", "v", "P"};
+        String[] colors = {"#33FD42", "#44F651", "#55EF60", "#65E96F", "#76E27E", "#87DB8D"};
+        StringBuilder logo = new StringBuilder();
+        for (int index = 0; index < letters.length; index++) {
+            logo.append(Ui.color(colors[index], letters[index]));
+        }
+        String prefix = Ui.color(Ui.DARK, "(") + Tags.BOLD.enclose(logo.toString()) + Ui.color(Ui.DARK, ")") + " ";
+
+        return new PluginDetails("Crates", prefix, new String[]{"crates", "ecrates", "excellentcrates", "crate", "case", "cases"}, "vi")
             .setConfigClass(Config.class)
             .setLangClass(Lang.class)
             .setPermissionsClass(Perms.class);

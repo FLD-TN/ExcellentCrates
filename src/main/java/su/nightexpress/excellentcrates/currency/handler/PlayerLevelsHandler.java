@@ -11,7 +11,7 @@ public class PlayerLevelsHandler implements CurrencyHandler {
     @Override
     @NotNull
     public String getDefaultName() {
-        return "XP Levels";
+        return "Cấp XP";
     }
 
     @Override

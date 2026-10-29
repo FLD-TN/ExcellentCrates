@@ -22,6 +22,7 @@ import su.nightexpress.excellentcrates.crate.effect.EffectModel;
 import su.nightexpress.excellentcrates.crate.impl.*;
 import su.nightexpress.excellentcrates.crate.listener.CrateListener;
 import su.nightexpress.excellentcrates.config.Perms;
+import su.nightexpress.excellentcrates.config.Ui;
 import su.nightexpress.excellentcrates.crate.menu.MilestonesMenu;
 import su.nightexpress.excellentcrates.crate.menu.OpeningAmountMenu;
 import su.nightexpress.excellentcrates.crate.menu.PreviewMenu;
@@ -106,10 +107,10 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
                 oldFile.delete();
             }
             if (rarities.isEmpty()) {
-                rarities.add(new Rarity(this.plugin, "common", Tags.WHITE.enclose("Common"), 10, true));
-                rarities.add(new Rarity(this.plugin, "uncommon", Tags.LIGHT_BLUE.enclose("Uncommon"), 5, false));
-                rarities.add(new Rarity(this.plugin, "rare", Tags.LIGHT_GREEN.enclose("Rare"), 2, false));
-                rarities.add(new Rarity(this.plugin, "legendary", Tags.LIGHT_ORANGE.enclose("Legendary"), 1, false));
+                rarities.add(new Rarity(this.plugin, "common", Ui.color("#E8E8E8", "Thường"), 10, true));
+                rarities.add(new Rarity(this.plugin, "uncommon", Ui.color("#7FDBFF", "Hiếm"), 5, false));
+                rarities.add(new Rarity(this.plugin, "rare", Ui.color("#B39DFF", "Sử thi"), 2, false));
+                rarities.add(new Rarity(this.plugin, "legendary", Ui.color("#FFB86B", "Huyền thoại"), 1, false));
             }
 
             rarities.forEach(rarity -> {

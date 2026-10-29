@@ -64,9 +64,9 @@ public class Config {
         () -> {
             return Map.of(
                 DEFAULT, Arrays.asList(
-                    LIGHT_YELLOW.enclose(BOLD.enclose(CRATE_NAME)),
-                    LIGHT_GRAY.enclose("Get keys at " + LIGHT_YELLOW.enclose("put_your_site.com")),
-                    LIGHT_GRAY.enclose("You have " + LIGHT_YELLOW.enclose("%excellentcrates_keys_" + CRATE_ID + "%") + " keys"))
+                    CRATE_NAME,
+                    Ui.desc("Bạn có " + Ui.color(Ui.SECTION, "%excellentcrates_keys_" + CRATE_ID + "%") + " key"),
+                    Ui.color(Ui.DARK, "[") + Ui.color(Ui.OK, "Chuột phải để mở") + Ui.color(Ui.DARK, "]"))
             );
         },
         "Here you can create your own hologram text templates to use it in your crates.",
@@ -90,7 +90,7 @@ public class Config {
     );
 
     public static final ConfigValue<String> CRATE_COOLDOWN_FORMATTER_READY = ConfigValue.create("Crate.Cooldown_Formatter.Ready",
-        LIGHT_GREEN.enclose("Ready to Open!"),
+        Ui.color(Ui.OK, "Sẵn sàng mở"),
         "Sets the custom message instead of empty counter when there is no cooldown for a crate."
     );
 
