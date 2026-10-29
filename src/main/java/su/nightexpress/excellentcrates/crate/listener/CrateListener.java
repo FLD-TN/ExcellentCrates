@@ -23,6 +23,7 @@ import su.nightexpress.excellentcrates.config.Config;
 import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.crate.CrateManager;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
+import su.nightexpress.excellentcrates.hologram.HologramHandler;
 import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderHook;
 import su.nightexpress.excellentcrates.util.ClickType;
 import su.nightexpress.excellentcrates.util.InteractType;
@@ -48,7 +49,13 @@ public class CrateListener extends AbstractListener<CratesPlugin> {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onQuit(PlayerQuitEvent event) {
         this.crateManager.removePreviewCooldown(event.getPlayer());
+        this.crateManager.removeOpenClickCooldown(event.getPlayer());
         this.adventureFix.remove(event.getPlayer().getUniqueId());
+
+        HologramHandler hologramHandler = this.plugin.getHologramHandler();
+        if (hologramHandler != null) {
+            hologramHandler.handleQuit(event.getPlayer());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -67,10 +74,11 @@ public class CrateListener extends AbstractListener<CratesPlugin> {
             block = event.getClickedBlock();
             if (block == null) return;
 
-            // ItemsAdder furniture hitbox: handled by ItemsAdderCrateListener (FurnitureInteractEvent), avoid double opening.
-            if (ItemsAdderHook.isAvailable() && ItemsAdderHook.getFurnitureLocation(block) != null) return;
-
             crate = this.crateManager.getCrateByBlock(block);
+
+            // ItemsAdder furniture hitbox: handled by ItemsAdderCrateListener (FurnitureInteractEvent), avoid double opening.
+            // Checked only for crate blocks, not on every block click.
+            if (crate != null && ItemsAdderHook.isAvailable() && ItemsAdderHook.getFurnitureLocation(block) != null) return;
         }
         if (crate == null) {
             return;
@@ -99,16 +107,8 @@ public class CrateListener extends AbstractListener<CratesPlugin> {
             }
         }
 
-        // We don't need cooldown check & apply when previewing crates from GUIs or commands. Only for world interaction.
-        if (clickAction == InteractType.CRATE_PREVIEW) {
-            if (this.crateManager.hasPreviewCooldown(player)) {
-                Lang.CRATE_PREVIEW_ERROR_COOLDOWN.getMessage()
-                    .replace(Placeholders.GENERIC_TIME, TimeUtil.formatDuration(this.crateManager.getPreviewCooldown(player)))
-                    .send(player);
-                return;
-            }
-            this.crateManager.setPreviewCooldown(player);
-        }
+        // We don't need cooldown check & apply when previewing/opening crates from GUIs or commands. Only for world interaction.
+        if (!this.crateManager.checkClickCooldown(player, clickAction)) return;
 
         this.crateManager.interactCrate(player, crate, clickAction, item, block);
     }

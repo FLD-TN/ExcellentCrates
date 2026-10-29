@@ -54,6 +54,8 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     private final Map<String, Crate>       crateMap;
     private final Map<String, PreviewMenu> previewMap;
     private final Map<UUID, Long> previewCooldown;
+    private final Map<UUID, Long> openCooldown;
+    private final Map<WorldPos, Crate> crateByPosMap;
     private final Map<UUID, Map<String, Integer>> batchRewards;
 
     private MilestonesMenu    milestonesMenu;
@@ -65,6 +67,8 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         this.crateMap = new HashMap<>();
         this.previewMap = new HashMap<>();
         this.previewCooldown = new HashMap<>();
+        this.openCooldown = new HashMap<>();
+        this.crateByPosMap = new HashMap<>();
         this.batchRewards = new HashMap<>();
     }
 
@@ -165,7 +169,10 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         if (crate.load()) {
             this.crateMap.put(crate.getId(), crate);
         }
-        else this.plugin.error("Crate not loaded: '" + crate.getFile().getName() + "'.");
+        else {
+            this.removeCratePositions(crate);
+            this.plugin.error("Crate not loaded: '" + crate.getFile().getName() + "'.");
+        }
     }
 
     public void loadRewardLimits() {
@@ -237,6 +244,8 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             crate.clear();
         });
         this.crateMap.clear();
+        this.crateByPosMap.clear();
+        this.openCooldown.clear();
 
         this.rarityMap.clear();
     }
@@ -332,7 +341,17 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     public Crate getCrateByLocation(@NotNull Location location) {
         WorldPos pos = WorldPos.from(location);
 
-        return this.getCrates().stream().filter(crate -> crate.getBlockPositions().contains(pos)).findFirst().orElse(null);
+        return this.crateByPosMap.get(pos);
+    }
+
+    // Port of 6.0.0: positions are mapped to crates, so a block click is one map lookup instead of a scan of all crates.
+    public void updateCratePositions(@NotNull Crate crate) {
+        this.removeCratePositions(crate);
+        crate.getBlockPositions().forEach(pos -> this.crateByPosMap.put(pos, crate));
+    }
+
+    public void removeCratePositions(@NotNull Crate crate) {
+        this.crateByPosMap.values().removeIf(has -> has == crate);
     }
 
     public void updateCrateHolograms() {
@@ -388,6 +407,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             crate.clear();
             this.plugin.runTaskAsync(task -> plugin.getData().deleteRewardLimitData(crate));
             this.crateMap.remove(crate.getId());
+            this.removeCratePositions(crate);
             return true;
         }
         return false;
@@ -404,9 +424,8 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     public void giveCrate(@NotNull Player player, @NotNull Crate crate, int amount) {
         if (amount < 1) return;
 
-        ItemStack crateItem = crate.getItem();
-        crateItem.setAmount(Math.min(64, amount));
-        Players.addItem(player, crateItem);
+        // Port of 6.0.0 giveCrateItem: no 64 cap, Players.addItem splits stacks (and drops what doesn't fit).
+        Players.addItem(player, crate.getItem(), amount);
     }
 
     public void previewCrate(@NotNull Player player, @NotNull CrateSource source) {
@@ -663,6 +682,56 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
 
     public void removePreviewCooldown(@NotNull Player player) {
         this.previewCooldown.remove(player.getUniqueId());
+    }
+
+    // Port of 7.0 InteractCooldownService (one cooldown for every crate interaction); here split per action:
+    // preview keeps 'Preview_Cooldown', opening uses 'Open_Click_Cooldown'.
+    public void setOpenClickCooldown(@NotNull Player player) {
+        long cooldown = Config.CRATE_OPEN_CLICK_COOLDOWN.get();
+        if (cooldown <= 0L) return;
+
+        this.openCooldown.put(player.getUniqueId(), System.currentTimeMillis() + cooldown);
+    }
+
+    public long getOpenClickCooldown(@NotNull Player player) {
+        long timestamp = this.openCooldown.getOrDefault(player.getUniqueId(), 0L);
+        if (System.currentTimeMillis() < timestamp) {
+            return timestamp;
+        }
+
+        this.openCooldown.remove(player.getUniqueId());
+        return 0L;
+    }
+
+    public void removeOpenClickCooldown(@NotNull Player player) {
+        this.openCooldown.remove(player.getUniqueId());
+    }
+
+    /**
+     * World interaction cooldowns (crate blocks / furniture). Not used for GUIs and commands.
+     * @return true if the interaction can go on.
+     */
+    public boolean checkClickCooldown(@NotNull Player player, @NotNull InteractType action) {
+        if (action == InteractType.CRATE_PREVIEW) {
+            if (this.hasPreviewCooldown(player)) {
+                Lang.CRATE_PREVIEW_ERROR_COOLDOWN.getMessage()
+                    .replace(Placeholders.GENERIC_TIME, TimeUtil.formatDuration(this.getPreviewCooldown(player)))
+                    .send(player);
+                return false;
+            }
+            this.setPreviewCooldown(player);
+            return true;
+        }
+
+        long openCooldown = this.getOpenClickCooldown(player);
+        if (openCooldown > 0L) {
+            Lang.CRATE_OPEN_ERROR_INTERACT_COOLDOWN.getMessage()
+                .replace(Placeholders.GENERIC_TIME, TimeUtil.formatDuration(openCooldown))
+                .send(player);
+            return false;
+        }
+        this.setOpenClickCooldown(player);
+        return true;
     }
 
     public void playCrateEffects() {

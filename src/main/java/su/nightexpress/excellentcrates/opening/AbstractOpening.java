@@ -4,7 +4,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.CratesPlugin;
+import su.nightexpress.excellentcrates.Placeholders;
+import su.nightexpress.excellentcrates.api.event.CrateObtainRewardEvent;
 import su.nightexpress.excellentcrates.api.opening.Opening;
+import su.nightexpress.excellentcrates.config.Lang;
+import su.nightexpress.excellentcrates.crate.impl.Reward;
 import su.nightexpress.excellentcrates.api.opening.Spinner;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 import su.nightexpress.excellentcrates.crate.impl.CrateSource;
@@ -31,6 +35,7 @@ public abstract class AbstractOpening extends Runnable implements Opening {
     protected boolean refundable;
     protected boolean hasRewardAttempts;
     protected boolean costPaid;
+    protected boolean refunded;
 
     public AbstractOpening(@NotNull CratesPlugin plugin, @NotNull Player player,
                            @NotNull CrateSource source, @Nullable CrateKey key) {
@@ -83,22 +88,64 @@ public abstract class AbstractOpening extends Runnable implements Opening {
         this.getSpinners().forEach(Spinner::tick);
     }
 
+    /**
+     * Gives a reward rolled earlier in this opening. Limits are counted on give, so a reward rolled at the
+     * start of an animation (or picked in a menu) may be out of stock by now: it's swapped for another one
+     * the player can still win (same rarity first). BoxPvP fix, upstream (6.6.1, 7.x) gives it anyway.
+     */
+    public void giveReward(@NotNull Reward reward) {
+        Reward given = reward;
+        if (!reward.canWin(this.player)) {
+            given = this.rollReplacement(reward);
+            if (given == null) {
+                this.refund();
+                Lang.CRATE_OPEN_REWARD_SOLD_OUT.getMessage().replace(reward.replacePlaceholders()).send(this.player);
+                return;
+            }
+            Lang.CRATE_OPEN_REWARD_REPLACED.getMessage()
+                .replace(Placeholders.GENERIC_NAME, reward.getName())
+                .replace(given.replacePlaceholders())
+                .send(this.player);
+        }
+
+        given.give(this.player);
+        this.plugin.getPluginManager().callEvent(new CrateObtainRewardEvent(given, this.player));
+    }
+
+    @Nullable
+    private Reward rollReplacement(@NotNull Reward reward) {
+        if (this.crate.hasRewards(this.player, reward.getRarity())) {
+            return this.crate.rollReward(this.player, reward.getRarity());
+        }
+        if (this.crate.hasRewards(this.player)) {
+            return this.crate.rollReward(this.player);
+        }
+        return null;
+    }
+
+    private void refund() {
+        if (this.refunded) return;
+        this.refunded = true;
+
+        if (this.key != null) {
+            this.plugin.getKeyManager().giveKey(this.player, this.key, 1);
+        }
+        if (this.source.getItem() != null) {
+            Players.addItem(this.player, this.crate.getItem());
+        }
+        // Port of 6.4.0: refund only the cost that was actually paid (not for cost bypass players).
+        if (this.costPaid) {
+            this.crate.getOpenCostMap().forEach((currency, amount) -> {
+                currency.getHandler().give(this.player, amount);
+            });
+        }
+    }
+
     @Override
     protected final void onStop() {
         if (this.isRefundable()) {
             if ((this.isEmergency() && !this.hasRewardRolled()) || !this.hasRewardAttempts()) {
-                if (this.key != null) {
-                    this.plugin.getKeyManager().giveKey(this.player, this.key, 1);
-                }
-                if (this.source.getItem() != null) {
-                    Players.addItem(this.player, this.crate.getItem());
-                }
-                // Port of 6.4.0: refund only the cost that was actually paid (not for cost bypass players).
-                if (this.costPaid) {
-                    this.crate.getOpenCostMap().forEach((currency, amount) -> {
-                        currency.getHandler().give(this.player, amount);
-                    });
-                }
+                this.refund();
             }
         }
 

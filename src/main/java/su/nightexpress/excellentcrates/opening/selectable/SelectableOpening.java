@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.CratesPlugin;
-import su.nightexpress.excellentcrates.api.event.CrateObtainRewardEvent;
 import su.nightexpress.excellentcrates.crate.impl.CrateSource;
 import su.nightexpress.excellentcrates.crate.impl.Reward;
 import su.nightexpress.excellentcrates.key.CrateKey;
@@ -87,10 +86,7 @@ public class SelectableOpening extends AbstractOpening {
         this.setRefundable(false);
         this.setHasRewardAttempts(true);
 
-        this.selectedRewards.forEach(reward -> {
-            reward.give(this.player);
-            this.plugin.getPluginManager().callEvent(new CrateObtainRewardEvent(reward, this.player));
-        });
+        this.selectedRewards.forEach(this::giveReward); // Re-checks limits: picked in the menu, given now.
         this.selectedRewards.clear();
         this.completed = true; // Use explicit variable to ensure all checks and validations are passed.
         return true;
@@ -98,6 +94,10 @@ public class SelectableOpening extends AbstractOpening {
 
     public void confirm() {
         this.confirmed = true;
+    }
+
+    public boolean isConfirmed() {
+        return this.confirmed;
     }
 
     @Override

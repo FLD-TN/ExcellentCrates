@@ -17,6 +17,7 @@ import su.nightexpress.excellentcrates.util.pos.WorldPos;
 import su.nightexpress.nightcore.util.*;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractHologramHandler<T> implements HologramHandler {
 
@@ -28,7 +29,7 @@ public abstract class AbstractHologramHandler<T> implements HologramHandler {
 
     public AbstractHologramHandler(@NotNull CratesPlugin plugin) {
         this.plugin = plugin;
-        this.entityMap = new HashMap<>();
+        this.entityMap = new ConcurrentHashMap<>();
     }
 
     protected static class EntityList {
@@ -95,21 +96,29 @@ public abstract class AbstractHologramHandler<T> implements HologramHandler {
         double yOffset = crate.getHologramYOffset();
         if (this.useDisplays) yOffset += 0.2;
 
+        List<Player> online = new ArrayList<>(plugin.getServer().getOnlinePlayers());
+
         for (HologramEntity entity : entityList.getHolograms()) {
             WorldPos position = entity.position;
-            if (!position.isChunkLoaded()) return;
 
+            // Port of 6.3.0: skip positions in unloaded chunks/worlds instead of stopping, so other positions still render.
             World world = position.getWorld();
-            Block block = position.toBlock();
-            if (world == null || block == null) return;
+            Block block = world == null || !position.isChunkLoaded() ? null : position.toBlock();
+            if (block == null) {
+                this.discard(entity);
+                continue;
+            }
 
             double height = block.getBoundingBox().getHeight() / 2D + yOffset;
             Location location = LocationUtil.setCenter3D(block.getLocation()).add(0, height + entity.gap, 0);
 
-            new HashSet<>(plugin.getServer().getOnlinePlayers()).forEach(player -> {
+            online.forEach(player -> {
                 if (!CrateUtils.isInEffectRange(player, location)) {
-                    entity.removePlayer(player);
-                    this.sendPacket(player, this.createDestroyPacket(Lists.newSet(entity.entityID)));
+                    // Destroy only for players that have it, not for every online player every refresh.
+                    if (entity.isCreated(player)) {
+                        entity.removePlayer(player);
+                        this.sendPacket(player, this.createDestroyPacket(Lists.newSet(entity.entityID)));
+                    }
                     return;
                 }
 
@@ -128,10 +137,27 @@ public abstract class AbstractHologramHandler<T> implements HologramHandler {
         }
     }
 
+    private void discard(@NotNull HologramEntity entity) {
+        if (entity.players.isEmpty()) return;
+
+        T packet = this.createDestroyPacket(Lists.newSet(entity.entityID));
+        entity.players.forEach(playerId -> {
+            Player player = plugin.getServer().getPlayer(playerId);
+            if (player != null) this.sendPacket(player, packet);
+        });
+        entity.players.clear();
+    }
+
+    @Override
+    public void handleQuit(@NotNull Player player) {
+        this.entityMap.values().forEach(list -> list.getHolograms().forEach(entity -> entity.removePlayer(player)));
+    }
+
     private void createIfAbsent(@NotNull Crate crate) {
         if (this.entityMap.containsKey(crate.getId())) return;
 
-        EntityList list = this.entityMap.computeIfAbsent(crate.getId(), k -> new EntityList());
+        // Build the full list first: refresh runs async while editor/commands rebuild holograms on the main thread.
+        EntityList list = new EntityList();
 
         List<String> originText = crate.getHologramText();
         Collections.reverse(originText);
@@ -142,10 +168,12 @@ public abstract class AbstractHologramHandler<T> implements HologramHandler {
             for (String text : originText) {
                 int entityID = EntityUtil.nextEntityId();
 
-                list.holograms.add(new HologramEntity(entityID, pos, text, currentGap, new HashSet<>()));
+                list.holograms.add(new HologramEntity(entityID, pos, text, currentGap, ConcurrentHashMap.newKeySet()));
                 currentGap += this.lineGap;
             }
         });
+
+        this.entityMap.putIfAbsent(crate.getId(), list);
     }
 
     @Override

@@ -18,6 +18,11 @@ public interface HologramHandler {
 
     void remove(@NotNull Crate crate);
 
+    /**
+     * Port of 6.0.0 HologramListener#onQuit: forget the player as a viewer, so holograms spawn again on rejoin.
+     */
+    void handleQuit(@NotNull Player player);
+
 //    default void update(@NotNull Crate crate) {
 //        this.remove(crate);
 //        this.create(crate);

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.config.Keys;
 import su.nightexpress.excellentcrates.Placeholders;
-import su.nightexpress.excellentcrates.api.event.CrateObtainRewardEvent;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 import su.nightexpress.excellentcrates.crate.impl.Rarity;
 import su.nightexpress.excellentcrates.crate.impl.Reward;
@@ -102,12 +101,9 @@ public class RewardSpinner extends InventorySpinner {
             Reward reward = this.opening.getCrate().getReward(rewardId);
             if (reward == null) continue;
 
-            reward.give(this.opening.getPlayer());
-
-            CrateObtainRewardEvent rewardEvent = new CrateObtainRewardEvent(reward, this.getOpening().getPlayer());
-            this.plugin.getPluginManager().callEvent(rewardEvent);
-
             PDCUtil.remove(item, Keys.rewardId);
+
+            this.getOpening().giveReward(reward); // Re-checks limits: rolled at spin time, given now.
         }
     }
 }

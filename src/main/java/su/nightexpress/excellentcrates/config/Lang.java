@@ -287,6 +287,16 @@ public class Lang extends CoreLang {
         color(SECTION, PLAYER_DISPLAY_NAME) + color(DESC, " vừa trúng ") + REWARD_NAME + color(DESC, " từ ") + CRATE_NAME
     );
 
+    public static final LangText CRATE_OPEN_REWARD_REPLACED = LangText.of("Crate.Open.Reward.Replaced",
+        warn(hl(GENERIC_NAME) + " vừa hết lượt, bạn nhận " + REWARD_NAME + " thay thế"));
+
+    public static final LangText CRATE_OPEN_REWARD_SOLD_OUT = LangText.of("Crate.Open.Reward.SoldOut",
+        warn(hl(REWARD_NAME) + " vừa hết lượt, bạn được hoàn lại key"));
+
+    public static final LangText CRATE_OPEN_ERROR_INTERACT_COOLDOWN = LangText.of("Crate.Open.Error.InteractCooldown",
+        error("Mở lại sau " + color(BAD, GENERIC_TIME))
+    );
+
     public static final LangText CRATE_PREVIEW_ERROR_COOLDOWN = LangText.of("Crate.Preview.Error.Cooldown",
         error("Xem trước lại sau " + color(BAD, GENERIC_TIME))
     );

@@ -21,9 +21,30 @@ public class OpeningListener extends AbstractListener<CratesPlugin> {
         this.openingManager = openingManager;
     }
 
+    /**
+     * Port of 7.0 AnimationSessionController#onQuit: leaving mid-animation finishes the opening and still
+     * grants the rewards (v7 BaseAnimationInstance#stop always completes). Openings that haven't rolled
+     * anything yet (selection not started, reward menu not confirmed) are refunded as before.
+     */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onQuit(PlayerQuitEvent event) {
-        this.openingManager.stopOpening(event.getPlayer());
+        Player player = event.getPlayer();
+        Opening opening = this.openingManager.getOpening(player);
+        if (opening == null) return;
+
+        boolean rolling;
+        if (opening instanceof InventoryOpening inventoryOpening) {
+            rolling = inventoryOpening.isStarted();
+        }
+        else if (opening instanceof SelectableOpening selectableOpening) {
+            rolling = selectableOpening.isConfirmed();
+        }
+        else rolling = true;
+
+        if (rolling && opening.isRunning() && !opening.isCompleted()) {
+            opening.instaRoll();
+        }
+        this.openingManager.stopOpening(player);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

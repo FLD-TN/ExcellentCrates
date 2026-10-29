@@ -42,6 +42,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
     private final Set<CrateKey>  keys;
     private final Set<WorldPos>  blockPositions;
     private final Set<WorldPos>  furniturePositions;
+    private Set<WorldPos>        allPositions = Collections.emptySet();
     private final Set<Milestone> milestones;
     private final Map<Currency, Double>         openCostMap;
     private final LinkedHashMap<String, Reward> rewardMap;
@@ -158,6 +159,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         });
         // ItemsAdder furniture positions are kept apart: furniture without hitbox stands in an empty (air) block.
         this.furniturePositions.addAll(config.getStringList("Block.Furniture_Positions").stream().map(WorldPos::deserialize).toList());
+        this.updatePositions();
 
         this.setPushbackEnabled(config.getBoolean("Block.Pushback.Enabled"));
         this.setHologramEnabled(config.getBoolean("Block.Hologram.Enabled"));
@@ -488,10 +490,12 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         WorldPos pos = WorldPos.from(location);
 
         this.blockPositions.add(pos);
+        this.updatePositions();
     }
 
     public void addFurniturePosition(@NotNull Location location) {
         this.furniturePositions.add(WorldPos.from(location));
+        this.updatePositions();
     }
 
     public boolean isFurniturePosition(@NotNull WorldPos pos) {
@@ -504,12 +508,15 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
     public boolean removeBlockPosition(@NotNull Location location) {
         WorldPos pos = WorldPos.from(location);
         boolean removed = this.blockPositions.remove(pos);
-        return this.furniturePositions.remove(pos) || removed;
+        removed = this.furniturePositions.remove(pos) || removed;
+        this.updatePositions();
+        return removed;
     }
 
     public void clearBlockPositions() {
         this.blockPositions.clear();
         this.furniturePositions.clear();
+        this.updatePositions();
     }
 
     @NotNull
@@ -648,9 +655,18 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
      */
     @NotNull
     public Set<WorldPos> getBlockPositions() {
+        return this.allPositions;
+    }
+
+    /**
+     * Caches block + furniture positions (read every tick by effects) and refreshes the
+     * position -> crate lookup map (port of 6.0.0 CrateManager#crateByPosMap).
+     */
+    private void updatePositions() {
         Set<WorldPos> positions = new HashSet<>(this.blockPositions);
         positions.addAll(this.furniturePositions);
-        return positions;
+        this.allPositions = Collections.unmodifiableSet(positions);
+        this.plugin.getCrateManager().updateCratePositions(this);
     }
 
     public boolean isHologramEnabled() {

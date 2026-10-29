@@ -141,6 +141,14 @@ public class Config {
         "[Default is 2500]"
     );
 
+    public static final ConfigValue<Long> CRATE_OPEN_CLICK_COOLDOWN = ConfigValue.create("Crate.Open_Click_Cooldown",
+        3000L,
+        "Sets cooldown (in milliseconds) between crate opens by clicking crate block(s) / furniture.",
+        "Prevents hacked clients from spamming open requests (amount GUI, openings).",
+        "Does not apply to GUIs and commands. Set 0 to disable.",
+        "[Default is 3000, same as 7.0 interaction cooldown]"
+    );
+
     public static final ConfigValue<Integer> CRATE_OPENING_CLOSE_TIME = ConfigValue.create("Crate.Opening_Close_Time",
         20,
         "Sets how soon (in ticks) crate opening animation GUI will be closed when completed.",

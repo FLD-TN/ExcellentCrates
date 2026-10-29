@@ -130,6 +130,7 @@ public class CratesPlugin extends NightDataPlugin<CrateUser> {
         if (this.menuManager != null) this.menuManager.shutdown();
         if (this.hologramHandler != null) this.hologramHandler.shutdown();
         if (this.currencyManager != null) this.currencyManager.shutdown();
+        if (this.crateLogger != null) this.crateLogger.shutdown();
 
         if (Plugins.hasPlaceholderAPI()) {
             PlaceholderHook.shutdown();

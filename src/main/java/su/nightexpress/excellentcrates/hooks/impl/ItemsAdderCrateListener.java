@@ -94,10 +94,7 @@ public class ItemsAdderCrateListener extends AbstractListener<CratesPlugin> {
         InteractType action = Config.getCrateClickAction(clickType);
         if (action == null) return;
 
-        if (action == InteractType.CRATE_PREVIEW) {
-            if (this.crateManager.hasPreviewCooldown(player)) return;
-            this.crateManager.setPreviewCooldown(player);
-        }
+        if (!this.crateManager.checkClickCooldown(player, action)) return;
 
         this.crateManager.interactCrate(player, crate, action, null, location.getBlock());
     }
