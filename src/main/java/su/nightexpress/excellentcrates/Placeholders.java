@@ -222,7 +222,8 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
                     Block block = worldPos.toBlock();
                     if (block == null) return problem("null");
 
-                    String name = Tags.LIGHT_ORANGE.enclose(LangAssets.get(block.getType()));
+                    boolean furniture = crate.isFurniturePosition(worldPos);
+                    String name = Tags.LIGHT_ORANGE.enclose(furniture ? "Furniture" : LangAssets.get(block.getType()));
 
                     String x = Tags.LIGHT_ORANGE.enclose(NumberUtil.format(worldPos.getX()));
                     String y = Tags.LIGHT_ORANGE.enclose(NumberUtil.format(worldPos.getY()));
@@ -231,7 +232,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
                     String coords = x + ", " + y + ", " + z + " in " + world;
                     String line = coords + " (" + name + ")";
 
-                    return block.isEmpty() ? problem(line) : good(line);
+                    return block.isEmpty() && !furniture ? problem(line) : good(line);
                 }).collect(Collectors.joining("\n"));
             })
             .add(CRATE_EFFECT_MODEL, () -> StringUtil.capitalizeUnderscored(crate.getEffectModel().name().toLowerCase()))

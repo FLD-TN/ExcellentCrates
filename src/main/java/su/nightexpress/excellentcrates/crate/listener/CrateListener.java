@@ -23,6 +23,7 @@ import su.nightexpress.excellentcrates.config.Config;
 import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.crate.CrateManager;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
+import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderHook;
 import su.nightexpress.excellentcrates.util.ClickType;
 import su.nightexpress.excellentcrates.util.InteractType;
 import su.nightexpress.nightcore.manager.AbstractListener;
@@ -65,6 +66,9 @@ public class CrateListener extends AbstractListener<CratesPlugin> {
             item = null;
             block = event.getClickedBlock();
             if (block == null) return;
+
+            // ItemsAdder furniture hitbox: handled by ItemsAdderCrateListener (FurnitureInteractEvent), avoid double opening.
+            if (ItemsAdderHook.isAvailable() && ItemsAdderHook.getFurnitureLocation(block) != null) return;
 
             crate = this.crateManager.getCrateByBlock(block);
         }

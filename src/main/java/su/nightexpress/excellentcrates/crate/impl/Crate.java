@@ -41,6 +41,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
 
     private final Set<CrateKey>  keys;
     private final Set<WorldPos>  blockPositions;
+    private final Set<WorldPos>  furniturePositions;
     private final Set<Milestone> milestones;
     private final Map<Currency, Double>         openCostMap;
     private final LinkedHashMap<String, Reward> rewardMap;
@@ -74,6 +75,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         this.openCostMap = new HashMap<>();
         this.rewardMap = new LinkedHashMap<>();
         this.blockPositions = new HashSet<>();
+        this.furniturePositions = new HashSet<>();
         this.milestones = new HashSet<>();
         this.placeholderMap = Placeholders.forCrate(this);
         this.placeholderFullMap = Placeholders.forCrateAll(this);
@@ -154,6 +156,8 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
             Block block = pos.toBlock();
             return block != null && block.isEmpty();
         });
+        // ItemsAdder furniture positions are kept apart: furniture without hitbox stands in an empty (air) block.
+        this.furniturePositions.addAll(config.getStringList("Block.Furniture_Positions").stream().map(WorldPos::deserialize).toList());
 
         this.setPushbackEnabled(config.getBoolean("Block.Pushback.Enabled"));
         this.setHologramEnabled(config.getBoolean("Block.Hologram.Enabled"));
@@ -208,6 +212,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         CustomItemRef.write(config, "ItemProvider", this.itemRef);
 
         config.set("Block.Positions", this.blockPositions.stream().map(WorldPos::serialize).toList());
+        config.set("Block.Furniture_Positions", this.furniturePositions.stream().map(WorldPos::serialize).toList());
         config.set("Block.Pushback.Enabled", this.isPushbackEnabled());
         config.set("Block.Hologram.Enabled", this.isHologramEnabled());
         config.set("Block.Hologram.Template", this.getHologramTemplate());
@@ -476,8 +481,17 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         this.blockPositions.add(pos);
     }
 
+    public void addFurniturePosition(@NotNull Location location) {
+        this.furniturePositions.add(WorldPos.from(location));
+    }
+
+    public boolean isFurniturePosition(@NotNull WorldPos pos) {
+        return this.furniturePositions.contains(pos);
+    }
+
     public void clearBlockPositions() {
         this.blockPositions.clear();
+        this.furniturePositions.clear();
     }
 
     @NotNull
@@ -611,9 +625,14 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         this.pushbackEnabled = blockPushback;
     }
 
+    /**
+     * @return Positions of all crate blocks, including ItemsAdder furniture positions.
+     */
     @NotNull
     public Set<WorldPos> getBlockPositions() {
-        return new HashSet<>(this.blockPositions);
+        Set<WorldPos> positions = new HashSet<>(this.blockPositions);
+        positions.addAll(this.furniturePositions);
+        return positions;
     }
 
     public boolean isHologramEnabled() {

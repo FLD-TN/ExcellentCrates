@@ -40,6 +40,7 @@ public class Perms {
     public static final UniPermission COMMAND_PREVIEW_OTHERS     = new UniPermission(PREFIX_COMMAND + "preview.others", "Access to the '/crate preview' sub-command on other players.");
     public static final UniPermission COMMAND_RESETCOOLDOWN      = new UniPermission(PREFIX_COMMAND + "resetcooldown", "Access to the '/crate resetcooldown' sub-command.");
     public static final UniPermission COMMAND_RESETLIMIT         = new UniPermission(PREFIX_COMMAND + "resetlimit", "Access to the '/crate resetlimit' sub-command.");
+    public static final UniPermission COMMAND_SETBLOCK           = new UniPermission(PREFIX_COMMAND + "setblock", "Access to the '/crate setblock' sub-command.");
 
     public static final UniPermission BYPASS_CRATE_OPEN_COST       = new UniPermission(PREFIX_BYPASS_OPEN_COST + Placeholders.WILDCARD, "Bypasses all crate open costs.");
     public static final UniPermission BYPASS_CRATE_COOLDOWN        = new UniPermission(PREFIX_BYPASS + "crate.opencooldown", "Bypasses crate open cooldown.");
@@ -64,7 +65,8 @@ public class Perms {
             COMMAND_MENU, COMMAND_MENU_OTHERS,
             COMMAND_PREVIEW, COMMAND_PREVIEW_OTHERS,
             COMMAND_RESETCOOLDOWN,
-            COMMAND_RESETLIMIT
+            COMMAND_RESETLIMIT,
+            COMMAND_SETBLOCK
         );
 
         BYPASS.addChildren(

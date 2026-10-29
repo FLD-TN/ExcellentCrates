@@ -27,6 +27,8 @@ import su.nightexpress.excellentcrates.data.impl.CrateData;
 import su.nightexpress.excellentcrates.data.impl.CrateUser;
 import su.nightexpress.excellentcrates.data.impl.LimitData;
 import su.nightexpress.excellentcrates.editor.type.CreationResult;
+import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderCrateListener;
+import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderHook;
 import su.nightexpress.excellentcrates.key.CrateKey;
 import su.nightexpress.excellentcrates.opening.AbstractOpening;
 import su.nightexpress.excellentcrates.opening.impl.BasicOpening;
@@ -79,6 +81,9 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         this.addTask(plugin.createTask(() -> BasicOpening.tickVisuals(this.plugin)).setSecondsInterval(1));
 
         this.addListener(new CrateListener(this.plugin, this));
+        if (ItemsAdderHook.isAvailable()) {
+            this.addListener(new ItemsAdderCrateListener(this.plugin, this));
+        }
     }
 
     private void loadRarities() {

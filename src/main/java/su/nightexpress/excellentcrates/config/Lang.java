@@ -177,6 +177,22 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.enclose("Reset " + LIGHT_YELLOW.enclose(PLAYER_NAME) + "'s open cooldown for " + LIGHT_YELLOW.enclose(CRATE_NAME) + "."));
 
 
+    public static final LangString COMMAND_SETBLOCK_DESC = LangString.of("Command.SetBlock.Desc",
+        "Gắn crate vào block hoặc furniture đang nhìn.");
+
+    public static final LangString COMMAND_SETBLOCK_USAGE = LangString.of("Command.SetBlock.Usage",
+        "<crate>");
+
+    public static final LangText COMMAND_SETBLOCK_DONE = LangText.of("Command.SetBlock.Done",
+        Ui.success("Đã gắn " + Ui.hl(CRATE_NAME) + " tại " + Ui.hl(LOCATION_X + ", " + LOCATION_Y + ", " + LOCATION_Z) + " " + Ui.color(Ui.DARK, "(" + LOCATION_WORLD + ")")));
+
+    public static final LangText COMMAND_SETBLOCK_ERROR_TARGET = LangText.of("Command.SetBlock.Error.Target",
+        Ui.error("Hãy nhìn vào một block hoặc furniture (trong 6 block)"));
+
+    public static final LangText COMMAND_SETBLOCK_ERROR_TAKEN = LangText.of("Command.SetBlock.Error.Taken",
+        Ui.error("Vị trí này đã gắn với " + Ui.hl(CRATE_NAME)));
+
+
     public static final LangString COMMAND_MENU_USAGE = LangString.of("Command.Menu.Usage",
         "[menu]");
 

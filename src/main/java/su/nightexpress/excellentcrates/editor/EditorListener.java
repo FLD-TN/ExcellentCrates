@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
+import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderHook;
 import su.nightexpress.excellentcrates.util.CrateUtils;
 import su.nightexpress.nightcore.dialog.Dialog;
 import su.nightexpress.nightcore.manager.AbstractListener;
@@ -27,6 +28,9 @@ public class EditorListener extends AbstractListener<CratesPlugin> {
 
         Block block = event.getClickedBlock();
         if (block == null) return;
+
+        // ItemsAdder furniture hitbox: link the furniture itself (handled by ItemsAdderCrateListener).
+        if (ItemsAdderHook.isAvailable() && ItemsAdderHook.getFurnitureLocation(block) != null) return;
 
         event.setUseInteractedBlock(Event.Result.DENY);
         event.setUseItemInHand(Event.Result.DENY);

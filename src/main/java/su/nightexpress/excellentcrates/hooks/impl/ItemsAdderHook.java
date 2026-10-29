@@ -1,6 +1,10 @@
 package su.nightexpress.excellentcrates.hooks.impl;
 
+import dev.lone.itemsadder.api.CustomFurniture;
 import dev.lone.itemsadder.api.CustomStack;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +33,32 @@ public class ItemsAdderHook {
 
     public static boolean isValidId(@NotNull String itemId) {
         return isAvailable() && CustomStack.isInRegistry(itemId);
+    }
+
+    /**
+     * @return Location of the furniture entity that owns this block (furniture hitbox), or null if it's not a furniture block.
+     */
+    @Nullable
+    public static Location getFurnitureLocation(@NotNull Block block) {
+        if (!isAvailable()) return null;
+
+        CustomFurniture furniture = CustomFurniture.byAlreadySpawned(block);
+        if (furniture == null || furniture.getEntity() == null) return null;
+
+        return furniture.getEntity().getLocation();
+    }
+
+    /**
+     * @return Location of the furniture if the entity is an ItemsAdder furniture, otherwise null.
+     */
+    @Nullable
+    public static Location getFurnitureLocation(@NotNull Entity entity) {
+        if (!isAvailable()) return null;
+
+        CustomFurniture furniture = CustomFurniture.byAlreadySpawned(entity);
+        if (furniture == null || furniture.getEntity() == null) return null;
+
+        return furniture.getEntity().getLocation();
     }
 
     @Nullable
