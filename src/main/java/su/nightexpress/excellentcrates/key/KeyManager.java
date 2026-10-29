@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.CratesPlugin;
@@ -143,14 +144,35 @@ public class KeyManager extends AbstractManager<CratesPlugin> {
         return null;
     }
 
+    // Port of 6.1.0 getOpenKey: held keys first, then inventory (unless hold is required), then virtual keys.
     @Nullable
-    public CrateKey getFirstKey(@NotNull Player player, @NotNull Crate crate) {
-        Predicate<ItemStack> predicate = itemStack -> this.isKey(itemStack, crate);
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && !item.getType().isAir() && predicate.test(item)) {
-                return this.getKeyByItem(item);
+    public CrateKey getOpenKey(@NotNull Player player, @NotNull Crate crate) {
+        PlayerInventory inventory = player.getInventory();
+        List<ItemStack> content = new ArrayList<>();
+        if (!crate.isAllVirtualKeys()) {
+            content.add(inventory.getItemInMainHand());
+            content.add(inventory.getItemInOffHand());
+            if (!Config.CRATE_HOLD_KEY_TO_OPEN.get()) {
+                content.addAll(Arrays.asList(inventory.getContents()));
             }
         }
+
+        for (ItemStack itemStack : content) {
+            if (itemStack == null || itemStack.getType().isAir()) continue;
+
+            CrateKey key = this.getKeyByItem(itemStack);
+            if (key != null && crate.isGoodKey(key)) {
+                return key;
+            }
+        }
+
+        CrateUser user = plugin.getUserManager().getUserData(player);
+        for (CrateKey key : crate.getKeys()) {
+            if (key.isVirtual() && user.getKeys(key.getId()) > 0) {
+                return key;
+            }
+        }
+
         return null;
     }
 

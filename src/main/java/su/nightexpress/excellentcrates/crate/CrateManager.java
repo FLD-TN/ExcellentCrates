@@ -28,6 +28,7 @@ import su.nightexpress.excellentcrates.data.impl.CrateUser;
 import su.nightexpress.excellentcrates.data.impl.LimitData;
 import su.nightexpress.excellentcrates.editor.type.CreationResult;
 import su.nightexpress.excellentcrates.key.CrateKey;
+import su.nightexpress.excellentcrates.opening.AbstractOpening;
 import su.nightexpress.excellentcrates.opening.impl.BasicOpening;
 import su.nightexpress.excellentcrates.util.CrateUtils;
 import su.nightexpress.excellentcrates.util.InteractType;
@@ -459,6 +460,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             return false;
         }
 
+        CrateKey key = null;
         CrateUser user = plugin.getUserManager().getUserData(player);
         CrateData crateData = user.getCrateData(crate);
 
@@ -470,17 +472,13 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             return false;
         }
 
+        // Port of 6.1.0: pick the key once (hand > off hand > inventory > virtual) and use it for both take and refund.
         if (!settings.isForce() && crate.isKeyRequired()) {
-            if (!this.plugin.getKeyManager().hasKey(player, crate)) {
-                Lang.CRATE_OPEN_ERROR_NO_KEY.getMessage().replace(crate.replacePlaceholders()).send(player);
+            key = this.plugin.getKeyManager().getOpenKey(player, crate);
+            if (key == null) {
+                boolean holdRequired = Config.CRATE_HOLD_KEY_TO_OPEN.get() && !crate.isAllVirtualKeys();
+                (holdRequired ? Lang.CRATE_OPEN_ERROR_NO_HOLD_KEY : Lang.CRATE_OPEN_ERROR_NO_KEY).getMessage().replace(crate.replacePlaceholders()).send(player);
                 return false;
-            }
-            if (Config.CRATE_HOLD_KEY_TO_OPEN.get() && crate.isAllPhysicalKeys()) {
-                ItemStack main = player.getInventory().getItemInMainHand();
-                if (!this.plugin.getKeyManager().isKey(main, crate)) {
-                    Lang.CRATE_OPEN_ERROR_NO_HOLD_KEY.getMessage().replace(crate.replacePlaceholders()).send(player);
-                    return false;
-                }
             }
         }
 
@@ -506,8 +504,6 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         plugin.getPluginManager().callEvent(openEvent);
         if (openEvent.isCancelled()) return false;
 
-        CrateKey key = crate.isKeyRequired() ? this.plugin.getKeyManager().getFirstKey(player, crate) : null;
-
         Opening opening = this.plugin.getOpeningManager().createOpening(player, source, key);
         opening.setRefundable(!settings.isForce());
 
@@ -516,12 +512,17 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         }
 
         if (!settings.isForce()) {
-            // Take costs
-            crate.getOpenCostMap().forEach((currency, amount) -> currency.getHandler().take(player, amount));
+            // Take costs (skipped for bypass players, so nothing is refunded to them either).
+            if (!crate.hasCostBypassPermisssion(player)) {
+                crate.getOpenCostMap().forEach((currency, amount) -> currency.getHandler().take(player, amount));
+                if (opening instanceof AbstractOpening abstractOpening) {
+                    abstractOpening.setCostPaid(true);
+                }
+            }
 
             // Take key
-            if (crate.isKeyRequired()) {
-                this.plugin.getKeyManager().takeKey(player, crate);
+            if (crate.isKeyRequired() && key != null) {
+                this.plugin.getKeyManager().takeKey(player, key, 1);
             }
 
             // Take crate item stack

@@ -327,6 +327,13 @@ public class Reward implements Weighted, Placeholder {
                 .broadcast();
         }
 
+        // Port of 6.6.1 getRewardLimitOrCreate: global limit data must exist on win, otherwise global limits are never counted.
+        if (globalLimits.isEnabled() && this.globalLimitData == null) {
+            LimitData created = LimitData.create();
+            this.globalLimitData = created;
+            this.plugin.runTaskAsync(task -> this.plugin.getData().insertRewardLimitData(this, created));
+        }
+
         if (globalLimits.isEnabled() && this.globalLimitData != null) {
             if (!globalLimits.isUnlimitedAmount()) {
                 this.globalLimitData.setAmount(globalLimitData.getAmount() + 1);

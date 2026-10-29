@@ -30,6 +30,7 @@ public abstract class AbstractOpening extends Runnable implements Opening {
 
     protected boolean refundable;
     protected boolean hasRewardAttempts;
+    protected boolean costPaid;
 
     public AbstractOpening(@NotNull CratesPlugin plugin, @NotNull Player player,
                            @NotNull CrateSource source, @Nullable CrateKey key) {
@@ -92,9 +93,12 @@ public abstract class AbstractOpening extends Runnable implements Opening {
                 if (this.source.getItem() != null) {
                     Players.addItem(this.player, this.crate.getItem());
                 }
-                this.crate.getOpenCostMap().forEach((currency, amount) -> {
-                    currency.getHandler().give(this.player, amount);
-                });
+                // Port of 6.4.0: refund only the cost that was actually paid (not for cost bypass players).
+                if (this.costPaid) {
+                    this.crate.getOpenCostMap().forEach((currency, amount) -> {
+                        currency.getHandler().give(this.player, amount);
+                    });
+                }
             }
         }
 
@@ -149,6 +153,14 @@ public abstract class AbstractOpening extends Runnable implements Opening {
     @Override
     public void setRefundable(boolean refundable) {
         this.refundable = refundable;
+    }
+
+    public boolean isCostPaid() {
+        return this.costPaid;
+    }
+
+    public void setCostPaid(boolean costPaid) {
+        this.costPaid = costPaid;
     }
 
     @Override
