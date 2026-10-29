@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.api.opening.Opening;
 import su.nightexpress.excellentcrates.opening.inventory.InventoryOpening;
+import su.nightexpress.excellentcrates.opening.selectable.SelectableOpening;
 import su.nightexpress.nightcore.api.event.PlayerOpenMenuEvent;
 import su.nightexpress.nightcore.manager.AbstractListener;
 
@@ -34,6 +35,13 @@ public class OpeningListener extends AbstractListener<CratesPlugin> {
 
         if (opening instanceof InventoryOpening inventoryOpening) {
             if (event.getMenu() != inventoryOpening.getMenu()) {
+                event.setCancelled(true);
+            }
+            return;
+        }
+
+        if (opening instanceof SelectableOpening selectableOpening) {
+            if (event.getMenu() != selectableOpening.getMenu()) {
                 event.setCancelled(true);
             }
             return;

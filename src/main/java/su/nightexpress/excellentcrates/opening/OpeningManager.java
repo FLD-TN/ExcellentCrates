@@ -15,9 +15,12 @@ import su.nightexpress.excellentcrates.key.CrateKey;
 import su.nightexpress.excellentcrates.opening.impl.BasicOpening;
 import su.nightexpress.excellentcrates.opening.inventory.InventoryOpening;
 import su.nightexpress.excellentcrates.opening.inventory.InventoryOpeningMenu;
+import su.nightexpress.excellentcrates.opening.selectable.SelectableProvider;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.manager.AbstractManager;
+import su.nightexpress.nightcore.util.FileUtil;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -53,7 +56,24 @@ public class OpeningManager extends AbstractManager<CratesPlugin> {
             String id = FileConfig.getName(config.getFile());
             this.loadProvider(id, menu);
         }
+        this.loadSelectableProviders();
         this.plugin.info("Loaded " + this.providerMap.size() + " crate openings.");
+    }
+
+    // Port of 6.3.0: selectable openings from /openings/selectable/, defaults 'selective_1' and 'selective_3'.
+    private void loadSelectableProviders() {
+        File dir = new File(plugin.getDataFolder() + Config.DIR_OPENINGS_SELECTABLE);
+        if (!dir.exists() && dir.mkdirs()) {
+            FileUtil.create(new File(dir, "selective_1.yml"));
+            FileUtil.create(new File(dir, "selective_3.yml"));
+        }
+
+        for (FileConfig config : FileConfig.loadAll(dir.getAbsolutePath())) {
+            String id = FileConfig.getName(config.getFile());
+            int defaultAmount = id.equalsIgnoreCase("selective_3") ? 3 : 1;
+            this.loadProvider(id, new SelectableProvider(this.plugin, config, defaultAmount));
+            config.saveChanges();
+        }
     }
 
     public void loadProvider(@NotNull String id, @NotNull OpeningProvider provider) {

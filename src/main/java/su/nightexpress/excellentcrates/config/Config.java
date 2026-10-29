@@ -25,6 +25,7 @@ public class Config {
     public static final String DIR_KEYS     = "/keys/";
     public static final String DIR_MENUS    = "/menu/";
     public static final String DIR_OPENINGS = "/openingsv2/";
+    public static final String DIR_OPENINGS_SELECTABLE = "/openings/selectable/";
 
     public static final String FILE_MILESTONES = "milestones.yml";
     public static final String FILE_LOGS       = "openings.log";
