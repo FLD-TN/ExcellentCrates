@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.Placeholders;
 import su.nightexpress.excellentcrates.config.Lang;
@@ -27,11 +28,37 @@ public class SetBlockCommand extends AbstractCommand<CratesPlugin> {
 
     private static final double DISTANCE = 6D;
 
+    public record Target(@NotNull Location location, boolean furniture) {}
+
     public SetBlockCommand(@NotNull CratesPlugin plugin) {
         super(plugin, new String[]{"setblock"}, Perms.COMMAND_SETBLOCK);
         this.setDescription(Lang.COMMAND_SETBLOCK_DESC);
         this.setUsage(Lang.COMMAND_SETBLOCK_USAGE);
         this.setPlayerOnly(true);
+    }
+
+    /**
+     * Block or furniture the player is looking at, within 6 blocks.
+     */
+    @Nullable
+    public static Target findTarget(@NotNull Player player) {
+        RayTraceResult trace = player.getWorld().rayTrace(player.getEyeLocation(), player.getEyeLocation().getDirection(),
+            DISTANCE, FluidCollisionMode.NEVER, true, 0.2D, entity -> entity != player);
+        if (trace == null) return null;
+
+        Entity entity = trace.getHitEntity();
+        if (entity != null) {
+            Location furniture = ItemsAdderHook.getFurnitureLocation(entity);
+            return furniture == null ? null : new Target(furniture, true);
+        }
+
+        Block block = trace.getHitBlock();
+        if (block == null) return null;
+
+        Location furniture = ItemsAdderHook.getFurnitureLocation(block);
+        if (furniture != null) return new Target(furniture, true);
+
+        return block.isEmpty() ? null : new Target(block.getLocation(), false);
     }
 
     @Override
@@ -57,41 +84,26 @@ public class SetBlockCommand extends AbstractCommand<CratesPlugin> {
             return;
         }
 
-        RayTraceResult trace = player.getWorld().rayTrace(player.getEyeLocation(), player.getEyeLocation().getDirection(),
-            DISTANCE, FluidCollisionMode.NEVER, true, 0.2D, entity -> entity != player);
-
-        Location furniture = null;
-        Block block = null;
-        if (trace != null) {
-            Entity entity = trace.getHitEntity();
-            if (entity != null) {
-                furniture = ItemsAdderHook.getFurnitureLocation(entity);
-            }
-            else if (trace.getHitBlock() != null) {
-                block = trace.getHitBlock();
-                furniture = ItemsAdderHook.getFurnitureLocation(block);
-            }
-        }
-
-        if (furniture == null && (block == null || block.isEmpty())) {
+        Target target = findTarget(player);
+        if (target == null) {
             Lang.COMMAND_SETBLOCK_ERROR_TARGET.getMessage().send(sender);
             return;
         }
 
-        Location location = furniture != null ? furniture : block.getLocation();
+        Location location = target.location();
         Crate linked = plugin.getCrateManager().getCrateByLocation(location);
         if (linked != null) {
             Lang.COMMAND_SETBLOCK_ERROR_TAKEN.getMessage().replace(linked.replacePlaceholders()).send(sender);
             return;
         }
 
-        if (furniture != null) {
-            crate.addFurniturePosition(furniture);
+        if (target.furniture()) {
+            crate.addFurniturePosition(location);
         }
         else {
             crate.addBlockPosition(location);
         }
-        crate.updateHologram();
+        crate.resetHologram();
         crate.saveSettings();
 
         Lang.COMMAND_SETBLOCK_DONE.getMessage()

@@ -62,7 +62,7 @@ public class CratePlacementEditor extends EditorMenu<CratesPlugin, Crate> implem
             }
             else {
                 crate.clearBlockPositions();
-                crate.updateHologram();
+                crate.resetHologram();
                 this.saveSettings(viewer, crate, false);
             }
         });

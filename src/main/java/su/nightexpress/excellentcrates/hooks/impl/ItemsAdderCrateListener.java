@@ -63,7 +63,7 @@ public class ItemsAdderCrateListener extends AbstractListener<CratesPlugin> {
             event.setCancelled(true);
             if (this.crateManager.getCrateByLocation(location) == null) {
                 assignCrate.addFurniturePosition(location);
-                assignCrate.updateHologram();
+                assignCrate.resetHologram();
                 assignCrate.saveSettings();
             }
             Dialog.stop(player);

@@ -311,6 +311,15 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         this.manageHologram(handler -> handler.refresh(this));
     }
 
+    /**
+     * Rebuilds hologram lines after positions change: refresh() only creates lines once per crate,
+     * so new positions got no hologram and removed ones kept theirs until reload.
+     */
+    public void resetHologram() {
+        this.removeHologram();
+        this.updateHologram();
+    }
+
     private void manageHologram(@NotNull Consumer<HologramHandler> consumer) {
         if (!this.isHologramEnabled()) return;
 
@@ -487,6 +496,15 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
 
     public boolean isFurniturePosition(@NotNull WorldPos pos) {
         return this.furniturePositions.contains(pos);
+    }
+
+    /**
+     * Unlinks one block or furniture position (7.0 BlockLinkService#unlinkCrateBlock).
+     */
+    public boolean removeBlockPosition(@NotNull Location location) {
+        WorldPos pos = WorldPos.from(location);
+        boolean removed = this.blockPositions.remove(pos);
+        return this.furniturePositions.remove(pos) || removed;
     }
 
     public void clearBlockPositions() {

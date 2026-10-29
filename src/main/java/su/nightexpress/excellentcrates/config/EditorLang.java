@@ -179,8 +179,9 @@ public class EditorLang {
         Placeholders.CRATE_LOCATIONS,
         "",
         section("Lưu ý"),
-        note("Có thể dùng /crate setblock"),
-        note("khi đang nhìn vào block."),
+        note("Nhìn vào block rồi dùng"),
+        note("/crate setblock để gắn,"),
+        note("/crate removeblock để gỡ."),
         "",
         action("Chuột trái để gắn block mới"),
         actionBad("Chuột phải để xóa hết")

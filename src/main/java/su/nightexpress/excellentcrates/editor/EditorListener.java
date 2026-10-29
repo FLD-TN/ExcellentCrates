@@ -41,7 +41,7 @@ public class EditorListener extends AbstractListener<CratesPlugin> {
         if (crate == null) return;
 
         crate.addBlockPosition(block.getLocation());
-        crate.updateHologram();
+        crate.resetHologram();
         crate.saveSettings();
         Dialog.stop(player);
     }

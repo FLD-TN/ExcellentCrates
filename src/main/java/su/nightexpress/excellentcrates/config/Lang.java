@@ -194,6 +194,15 @@ public class Lang extends CoreLang {
     public static final LangText COMMAND_SETBLOCK_ERROR_TAKEN = LangText.of("Command.SetBlock.Error.Taken",
         error("Vị trí này đã gắn với " + hl(CRATE_NAME)));
 
+    public static final LangString COMMAND_REMOVEBLOCK_DESC = LangString.of("Command.RemoveBlock.Desc",
+        "Gỡ crate khỏi block hoặc furniture đang nhìn.");
+
+    public static final LangText COMMAND_REMOVEBLOCK_DONE = LangText.of("Command.RemoveBlock.Done",
+        success("Đã gỡ " + hl(CRATE_NAME) + " tại " + hl(LOCATION_X + ", " + LOCATION_Y + ", " + LOCATION_Z) + " " + color(DARK, "(" + LOCATION_WORLD + ")")));
+
+    public static final LangText COMMAND_REMOVEBLOCK_ERROR_NOT_LINKED = LangText.of("Command.RemoveBlock.Error.NotLinked",
+        error("Block này chưa gắn với crate nào"));
+
 
     public static final LangString COMMAND_MENU_USAGE = LangString.of("Command.Menu.Usage",
         "[menu]");
