@@ -3,7 +3,9 @@ package su.nightexpress.excellentcrates.key;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.CratesPlugin;
+import su.nightexpress.excellentcrates.item.CustomItemRef;
 import su.nightexpress.excellentcrates.config.Keys;
 import su.nightexpress.excellentcrates.Placeholders;
 import su.nightexpress.nightcore.config.FileConfig;
@@ -17,9 +19,11 @@ import java.io.File;
 
 public class CrateKey extends AbstractFileData<CratesPlugin> implements Placeholder {
 
-    private String    name;
-    private boolean   virtual;
-    private ItemStack item;
+    private String        name;
+    private boolean       virtual;
+    private ItemStack     item;
+    private CustomItemRef itemRef;
+    private boolean       customItemsById = true;
 
     private final PlaceholderMap placeholderMap;
 
@@ -36,7 +40,10 @@ public class CrateKey extends AbstractFileData<CratesPlugin> implements Placehol
         if (item.getType().isAir() && !this.isVirtual()) {
             item = new ItemStack(Material.TRIPWIRE_HOOK);
         }
-        this.setItem(item);
+        // Custom items (ItemsAdder) are saved by ID in 'ItemProvider', 'Item' keeps the NBT copy as fallback.
+        this.customItemsById = config.getBoolean("Custom_Items_By_Id", true);
+        this.item = new ItemStack(item);
+        this.itemRef = CustomItemRef.read(config, "ItemProvider");
         return true;
     }
 
@@ -45,6 +52,8 @@ public class CrateKey extends AbstractFileData<CratesPlugin> implements Placehol
         config.set("Name", this.getName());
         config.set("Virtual", this.isVirtual());
         config.setItem("Item", this.getRawItem());
+        config.set("Custom_Items_By_Id", this.customItemsById);
+        CustomItemRef.write(config, "ItemProvider", this.itemRef);
     }
 
     @Override
@@ -77,7 +86,22 @@ public class CrateKey extends AbstractFileData<CratesPlugin> implements Placehol
 
     @NotNull
     public ItemStack getRawItem() {
-        return new ItemStack(item);
+        return CustomItemRef.resolve(this.itemRef, this.item);
+    }
+
+    @Nullable
+    public CustomItemRef getItemRef() {
+        return this.itemRef;
+    }
+
+    public boolean isCustomItemsById() {
+        return this.customItemsById;
+    }
+
+    public void setCustomItemsById(boolean customItemsById) {
+        ItemStack current = this.getRawItem();
+        this.customItemsById = customItemsById;
+        this.setItem(current);
     }
 
     @NotNull
@@ -89,5 +113,6 @@ public class CrateKey extends AbstractFileData<CratesPlugin> implements Placehol
 
     public void setItem(@NotNull ItemStack item) {
         this.item = new ItemStack(item);
+        this.itemRef = this.customItemsById ? CustomItemRef.fromItem(this.item) : null;
     }
 }

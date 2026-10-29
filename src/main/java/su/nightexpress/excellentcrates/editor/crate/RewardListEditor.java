@@ -49,7 +49,9 @@ public class RewardListEditor extends EditorMenu<CratesPlugin, Crate> implements
                 }
                 Reward reward = Reward.createEmpty(plugin, crate, count == 0 ? id : id + count);
                 reward.setName(ItemUtil.getItemName(cursor));
-                reward.getItems().add(new ItemStack(cursor));
+                List<ItemStack> rewardItems = reward.getItems();
+                rewardItems.add(new ItemStack(cursor));
+                reward.setItems(rewardItems);
                 reward.setPreview(cursor);
                 crate.addReward(reward);
                 event.getView().setCursor(null);

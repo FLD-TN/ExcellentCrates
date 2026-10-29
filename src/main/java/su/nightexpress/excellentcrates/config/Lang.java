@@ -271,6 +271,7 @@ public class Lang extends CoreLang {
 
     public static final LangString OTHER_MIDNIGHT = LangString.of("Other.Midnight", "Midnight");
     public static final LangString OTHER_FREE     = LangString.of("Other.Free", "Free");
+    public static final LangString OTHER_ITEM_SOURCE_NBT = LangString.of("Other.ItemSource.NBT", "Bản lưu NBT");
 
 
     public static final LangString EDITOR_ERROR_BAD_NAME = LangString.of("Editor.Error.BadName",

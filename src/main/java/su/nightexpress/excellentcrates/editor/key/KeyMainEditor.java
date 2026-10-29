@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
+import su.nightexpress.excellentcrates.Placeholders;
 import su.nightexpress.excellentcrates.config.EditorLang;
 import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.key.CrateKey;
@@ -55,6 +56,14 @@ public class KeyMainEditor extends EditorMenu<CratesPlugin, CrateKey> {
             item.setItemMeta(crateKey.getRawItem().getItemMeta());
             ItemReplacer.create(item).readLocale(EditorLang.KEY_ITEM).hideFlags().writeMeta();
         })).setVisibilityPolicy(viewer -> !this.getLink(viewer).isVirtual());
+
+        this.addItem(Material.AMETHYST_SHARD, EditorLang.CUSTOM_ITEMS_BY_ID, 31, (viewer, event, key) -> {
+            key.setCustomItemsById(!key.isCustomItemsById());
+            this.save(viewer);
+        }).getOptions().addDisplayModifier((viewer, item) -> {
+            CrateKey crateKey = this.getLink(viewer);
+            ItemReplacer.replace(item, Placeholders.forCustomItems(crateKey.isCustomItemsById(), crateKey.getItemRef()).replacer());
+        }).setVisibilityPolicy(viewer -> !this.getLink(viewer).isVirtual());
 
         this.addItem(Material.ENDER_PEARL, EditorLang.KEY_VIRTUAL, 24, (viewer, event, key) -> {
             key.setVirtual(!key.isVirtual());

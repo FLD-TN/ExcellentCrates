@@ -56,6 +56,15 @@ public class RewardMainEditor extends EditorMenu<CratesPlugin, Reward> implement
             ItemReplacer.create(item).readLocale(EditorLang.REWARD_PREVIEW).hideFlags().writeMeta();
         }));
 
+        this.addItem(Material.AMETHYST_SHARD, EditorLang.CUSTOM_ITEMS_BY_ID, 15, (viewer, event, reward) -> {
+            reward.setCustomItemsById(!reward.isCustomItemsById());
+            this.saveReward(viewer, reward, true);
+        }).getOptions().addDisplayModifier((viewer, item) -> {
+            Reward reward = this.getLink(viewer);
+            ItemReplacer.replace(item, Placeholders.forCustomItems(reward.isCustomItemsById(), null).replacer());
+            ItemReplacer.replace(item, str -> str.replace(Placeholders.ITEM_SOURCE, reward.hasCustomItemRefs() ? "ItemsAdder" : Lang.OTHER_ITEM_SOURCE_NBT.getString()));
+        });
+
         this.addItem(Material.FLOWER_BANNER_PATTERN, EditorLang.REWARD_SET_PLACEHOLDERS, 13, (viewer, event, reward) -> {
             reward.setPlaceholderApply(!reward.isPlaceholderApply());
             this.saveReward(viewer, reward, true);

@@ -7,6 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentcrates.CratesPlugin;
+import su.nightexpress.excellentcrates.Placeholders;
 import su.nightexpress.excellentcrates.api.currency.Currency;
 import su.nightexpress.excellentcrates.config.Config;
 import su.nightexpress.excellentcrates.config.EditorLang;
@@ -68,6 +69,14 @@ public class CrateMainEditor extends EditorMenu<CratesPlugin, Crate> implements 
             item.setItemMeta(crate.getItem().getItemMeta());
             ItemReplacer.create(item).readLocale(EditorLang.CRATE_ITEM).hideFlags().writeMeta();
         }));
+
+        this.addItem(Material.AMETHYST_SHARD, EditorLang.CUSTOM_ITEMS_BY_ID, 13, (viewer, event, crate) -> {
+            crate.setCustomItemsById(!crate.isCustomItemsById());
+            this.saveSettings(viewer, crate, true);
+        }).getOptions().addDisplayModifier((viewer, item) -> {
+            Crate crate = this.getLink(viewer);
+            ItemReplacer.replace(item, Placeholders.forCustomItems(crate.isCustomItemsById(), crate.getItemRef()).replacer());
+        });
 
         this.addItem(Material.GLOW_ITEM_FRAME, EditorLang.CRATE_PREVIEW_AND_OPENING, 6, (viewer, event, crate) -> {
             if (event.isShiftClick()) {

@@ -15,6 +15,7 @@ import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.config.Perms;
 import su.nightexpress.excellentcrates.crate.effect.EffectModel;
 import su.nightexpress.excellentcrates.hologram.HologramHandler;
+import su.nightexpress.excellentcrates.item.CustomItemRef;
 import su.nightexpress.excellentcrates.key.CrateKey;
 import su.nightexpress.excellentcrates.util.pos.BlockPos;
 import su.nightexpress.excellentcrates.util.pos.WorldPos;
@@ -52,7 +53,9 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
     private boolean     permissionRequired;
     private int         openCooldown;
     private boolean     keyRequired;
-    private ItemStack   item;
+    private ItemStack     item;
+    private CustomItemRef itemRef;
+    private boolean       customItemsById = true;
     private boolean     milestonesRepeatable;
     private boolean     pushbackEnabled;
     private boolean     hologramEnabled;
@@ -141,7 +144,10 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
             this.addKey(key);
         });
 
-        this.setItem(config.getItem("Item"));
+        // Custom items (ItemsAdder) are saved by ID in 'ItemProvider', 'Item' keeps the NBT copy as fallback.
+        this.customItemsById = config.getBoolean("Custom_Items_By_Id", true);
+        this.item = new ItemStack(config.getItem("Item"));
+        this.itemRef = CustomItemRef.read(config, "ItemProvider");
 
         this.blockPositions.addAll(config.getStringList("Block.Positions").stream().map(WorldPos::deserialize).toList());
         this.blockPositions.removeIf(pos -> {
@@ -198,6 +204,8 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         config.set("Key.Required", this.isKeyRequired());
         config.set("Key.Ids", this.getKeyNames());
         config.setItem("Item", this.getRawItem());
+        config.set("Custom_Items_By_Id", this.customItemsById);
+        CustomItemRef.write(config, "ItemProvider", this.itemRef);
 
         config.set("Block.Positions", this.blockPositions.stream().map(WorldPos::serialize).toList());
         config.set("Block.Pushback.Enabled", this.isPushbackEnabled());
@@ -565,7 +573,22 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
 
     @NotNull
     public ItemStack getRawItem() {
-        return new ItemStack(this.item);
+        return CustomItemRef.resolve(this.itemRef, this.item);
+    }
+
+    @Nullable
+    public CustomItemRef getItemRef() {
+        return this.itemRef;
+    }
+
+    public boolean isCustomItemsById() {
+        return this.customItemsById;
+    }
+
+    public void setCustomItemsById(boolean customItemsById) {
+        ItemStack current = this.getRawItem();
+        this.customItemsById = customItemsById;
+        this.setItem(current);
     }
 
     @NotNull
@@ -577,6 +600,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
 
     public void setItem(@NotNull ItemStack item) {
         this.item = new ItemStack(item);
+        this.itemRef = this.customItemsById ? CustomItemRef.fromItem(this.item) : null;
     }
 
     public boolean isPushbackEnabled() {

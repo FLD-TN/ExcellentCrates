@@ -92,6 +92,13 @@
             <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
+        <!-- ItemsAdder 4.0.15 (server version), installed locally from the plugin jar. Compile only. -->
+        <dependency>
+            <groupId>dev.lone</groupId>
+            <artifactId>itemsadder</artifactId>
+            <version>4.0.15</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

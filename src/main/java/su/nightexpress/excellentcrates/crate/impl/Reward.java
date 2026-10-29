@@ -15,6 +15,7 @@ import su.nightexpress.excellentcrates.config.Perms;
 import su.nightexpress.excellentcrates.data.impl.CrateData;
 import su.nightexpress.excellentcrates.data.impl.CrateUser;
 import su.nightexpress.excellentcrates.data.impl.LimitData;
+import su.nightexpress.excellentcrates.item.CustomItemRef;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.util.ItemUtil;
 import su.nightexpress.nightcore.util.Players;
@@ -27,6 +28,7 @@ import su.nightexpress.nightcore.util.text.NightMessage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -47,8 +49,11 @@ public class Reward implements Weighted, Placeholder {
     private boolean         placeholderApply;
     private LimitValues     playerLimits;
     private LimitValues     globalLimits;
-    private ItemStack       preview;
-    private List<ItemStack> items;
+    private ItemStack           preview;
+    private CustomItemRef       previewRef;
+    private List<ItemStack>     items;
+    private List<CustomItemRef> itemRefs;
+    private boolean             customItemsById = true;
     private List<String>    commands;
     private Set<String>     ignoredForPermissions;
 
@@ -146,10 +151,32 @@ public class Reward implements Weighted, Placeholder {
             );
         }
 
-        List<ItemStack> items = new ArrayList<>(Stream.of(config.getItemsEncoded(path + ".Items")).toList());
+        // Custom items (ItemsAdder) saved by ID in 'Item_Providers.<index>', 'Items' keeps the NBT copies as fallback.
+        // Read both lists together so indexes stay aligned even if some NBT copy can't be decoded.
+        ItemStack[] rawItems = config.getItemsEncoded(path + ".Items");
+        List<ItemStack> items = new ArrayList<>();
+        List<CustomItemRef> itemRefs = new ArrayList<>();
+        for (int index = 0; index < rawItems.length; index++) {
+            ItemStack item = rawItems[index];
+            CustomItemRef ref = CustomItemRef.read(config, path + ".Item_Providers." + index);
+            if (item == null || item.getType().isAir()) {
+                if (ref == null) continue;
+                item = new ItemStack(Material.BARRIER);
+            }
+            items.add(item);
+            itemRefs.add(ref);
+        }
         Set<String> ignoredPermissions = config.getStringSet(path + ".Ignored_For_Permissions");
 
-        return new Reward(plugin, crate, id, name, weight, rarity, broadcast, placeholderApply, playerLimit, globalLimit, preview, items, commands, ignoredPermissions);
+        Reward reward = new Reward(plugin, crate, id, name, weight, rarity, broadcast, placeholderApply, playerLimit, globalLimit, preview, items, commands, ignoredPermissions);
+
+        reward.customItemsById = config.getBoolean(path + ".Custom_Items_By_Id", true);
+        reward.previewRef = CustomItemRef.read(config, path + ".Preview_Provider");
+        if (itemRefs.size() == reward.itemRefs.size()) {
+            reward.itemRefs = itemRefs;
+        }
+
+        return reward;
     }
 
     public void write(@NotNull FileConfig config, @NotNull String path) {
@@ -163,6 +190,13 @@ public class Reward implements Weighted, Placeholder {
         config.setItemEncoded(path + ".Preview", this.getPreview());
         config.set(path + ".Commands", this.getCommands());
         config.setItemsEncoded(path + ".Items", this.getItems());
+        config.set(path + ".Custom_Items_By_Id", this.customItemsById);
+        CustomItemRef.write(config, path + ".Preview_Provider", this.previewRef);
+        config.remove(path + ".Item_Providers");
+        for (int index = 0; index < this.itemRefs.size(); index++) {
+            CustomItemRef ref = this.itemRefs.get(index);
+            if (ref != null) CustomItemRef.write(config, path + ".Item_Providers." + index, ref);
+        }
         config.set(path + ".Ignored_For_Permissions", this.getIgnoredForPermissions());
     }
 
@@ -466,11 +500,28 @@ public class Reward implements Weighted, Placeholder {
 
     @NotNull
     public ItemStack getPreview() {
-        return new ItemStack(this.preview);
+        return CustomItemRef.resolve(this.previewRef, this.preview);
     }
 
     public void setPreview(@NotNull ItemStack item) {
         this.preview = new ItemStack(item);
+        this.previewRef = this.customItemsById ? CustomItemRef.fromItem(this.preview) : null;
+    }
+
+    public boolean isCustomItemsById() {
+        return this.customItemsById;
+    }
+
+    public void setCustomItemsById(boolean customItemsById) {
+        ItemStack currentPreview = this.getPreview();
+        List<ItemStack> currentItems = this.getItems();
+        this.customItemsById = customItemsById;
+        this.setPreview(currentPreview);
+        this.setItems(currentItems);
+    }
+
+    public boolean hasCustomItemRefs() {
+        return this.previewRef != null || this.itemRefs.stream().anyMatch(Objects::nonNull);
     }
 
     @NotNull
@@ -492,13 +543,22 @@ public class Reward implements Weighted, Placeholder {
         this.ignoredForPermissions = ignoredForPermissions;
     }
 
+    /**
+     * @return Copy of the reward items, custom items (ItemsAdder) resolved by ID. Use {@link #setItems(List)} to change them.
+     */
     @NotNull
     public List<ItemStack> getItems() {
-        return this.items;
+        List<ItemStack> resolved = new ArrayList<>();
+        for (int index = 0; index < this.items.size(); index++) {
+            resolved.add(CustomItemRef.resolve(this.itemRefs.get(index), this.items.get(index)));
+        }
+        return resolved;
     }
 
     public void setItems(@NotNull List<ItemStack> items) {
         this.items = new ArrayList<>(items.stream().limit(27).toList());
         this.items.removeIf(item -> item == null || item.getType().isAir());
+        this.items.replaceAll(ItemStack::new);
+        this.itemRefs = new ArrayList<>(this.items.stream().map(item -> this.customItemsById ? CustomItemRef.fromItem(item) : null).toList());
     }
 }

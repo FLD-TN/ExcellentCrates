@@ -12,6 +12,22 @@ public class EditorLang {
 
     private static final String PREFIX = "Editor.Item.";
 
+    public static final LangItem CUSTOM_ITEMS_BY_ID = LangItem.of(PREFIX + "CustomItemsById",
+        Ui.name(Ui.C_ITEM, "Lưu item ItemsAdder theo ID"),
+        Ui.desc("Item ItemsAdder được lưu theo ID,"),
+        Ui.desc("sửa trong ItemsAdder là tự cập nhật."),
+        "",
+        Ui.section("Thông tin"),
+        Ui.row("Theo ID", Placeholders.CUSTOM_ITEMS_BY_ID),
+        Ui.row("Nguồn item", Placeholders.ITEM_SOURCE),
+        "",
+        Ui.section("Lưu ý"),
+        Ui.note("Tắt thì lưu bản NBT cố định,"),
+        Ui.note("không đổi theo ItemsAdder nữa."),
+        "",
+        Ui.action("Chuột trái để bật / tắt")
+    );
+
     public static final LangItem CRATES_EDITOR = builder(PREFIX + "Crates")
         .name("Crates")
         .click("navigate").build();

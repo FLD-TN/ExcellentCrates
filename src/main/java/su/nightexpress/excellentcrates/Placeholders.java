@@ -7,7 +7,9 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.api.currency.Currency;
+import su.nightexpress.excellentcrates.item.CustomItemRef;
 import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.crate.impl.*;
 import su.nightexpress.excellentcrates.key.CrateKey;
@@ -107,6 +109,9 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
     public static final String LIMIT_COOLDOWN      = "%limit_cooldown%";
     public static final String LIMIT_COOLDOWN_STEP = "%limit_cooldown_step%";
 
+    public static final String CUSTOM_ITEMS_BY_ID = "%custom_items_by_id%";
+    public static final String ITEM_SOURCE        = "%item_source%";
+
     public static final String REWARD_IGNORED_FOR_PERMISSIONS = "%reward_ignored_for_permissions%";
     public static final String REWARD_EDITOR_COMMANDS         = "%reward_editor_commands%";
     public static final String REWARD_EDITOR_ITEMS            = "%reward_editor_items%";
@@ -141,6 +146,21 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
 
         return prefix + Tags.LIGHT_GRAY.enclose(CoreLang.getEnabledOrDisabled(b));
     }*/
+
+    @NotNull
+    public static String itemSource(@Nullable CustomItemRef ref) {
+        if (ref == null) return Lang.OTHER_ITEM_SOURCE_NBT.getString();
+
+        String line = "ItemsAdder: " + ref.getItemId();
+        return ref.isValid() ? good(line) : problem(line);
+    }
+
+    @NotNull
+    public static PlaceholderMap forCustomItems(boolean byId, @Nullable CustomItemRef ref) {
+        return new PlaceholderMap()
+            .add(CUSTOM_ITEMS_BY_ID, () -> CoreLang.getYesOrNo(byId))
+            .add(ITEM_SOURCE, () -> itemSource(ref));
+    }
 
     @NotNull
     public static PlaceholderMap forCrateAll(@NotNull Crate crate) {
