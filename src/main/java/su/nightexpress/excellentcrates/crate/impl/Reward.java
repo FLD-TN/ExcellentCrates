@@ -348,10 +348,13 @@ public class Reward implements Weighted, Placeholder {
     public void give(@NotNull Player player) {
         this.giveContent(player);
 
-        Lang.CRATE_OPEN_REWARD_INFO.getMessage()
-            .replace(this.getCrate().replacePlaceholders())
-            .replace(this.replacePlaceholders())
-            .send(player);
+        // Batch openings announce all rewards in one summary message (CrateManager#batchOpen).
+        if (!this.plugin.getCrateManager().collectBatchReward(player, this)) {
+            Lang.CRATE_OPEN_REWARD_INFO.getMessage()
+                .replace(this.getCrate().replacePlaceholders())
+                .replace(this.replacePlaceholders())
+                .send(player);
+        }
 
         if (this.isBroadcast()) {
             Lang.CRATE_OPEN_REWARD_BROADCAST.getMessage()

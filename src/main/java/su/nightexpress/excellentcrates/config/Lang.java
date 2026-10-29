@@ -255,6 +255,16 @@ public class Lang extends CoreLang {
         TAG_NO_PREFIX,
         LIGHT_GRAY.enclose("You won " + LIGHT_GREEN.enclose(REWARD_NAME) + " from the " + LIGHT_GREEN.enclose(CRATE_NAME) + "!"));
 
+    public static final LangText CRATE_OPEN_BATCH_SUMMARY = LangText.of("Crate.Open.Batch.Summary",
+        TAG_NO_PREFIX,
+        Ui.success("Đã mở " + Ui.color(Ui.VALUE, "x" + GENERIC_AMOUNT) + " " + CRATE_NAME + ", nhận được:"),
+        GENERIC_ENTRY
+    );
+
+    public static final LangString CRATE_OPEN_BATCH_ENTRY = LangString.of("Crate.Open.Batch.Entry",
+        Ui.color(Ui.LABEL, " • ") + Ui.color(Ui.VALUE, "x" + GENERIC_AMOUNT + " ") + REWARD_NAME
+    );
+
     public static final LangText CRATE_OPEN_MILESTONE_COMPLETED = LangText.of("Crate.Open.Milestone.Completed",
         TAG_NO_PREFIX,
         SOUND.enclose(Sound.ENTITY_PLAYER_LEVELUP),

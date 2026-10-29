@@ -21,7 +21,9 @@ import su.nightexpress.excellentcrates.crate.effect.AbstractEffect;
 import su.nightexpress.excellentcrates.crate.effect.EffectModel;
 import su.nightexpress.excellentcrates.crate.impl.*;
 import su.nightexpress.excellentcrates.crate.listener.CrateListener;
+import su.nightexpress.excellentcrates.config.Perms;
 import su.nightexpress.excellentcrates.crate.menu.MilestonesMenu;
+import su.nightexpress.excellentcrates.crate.menu.OpeningAmountMenu;
 import su.nightexpress.excellentcrates.crate.menu.PreviewMenu;
 import su.nightexpress.excellentcrates.data.impl.CrateData;
 import su.nightexpress.excellentcrates.data.impl.CrateUser;
@@ -51,8 +53,10 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     private final Map<String, Crate>       crateMap;
     private final Map<String, PreviewMenu> previewMap;
     private final Map<UUID, Long> previewCooldown;
+    private final Map<UUID, Map<String, Integer>> batchRewards;
 
-    private MilestonesMenu   milestonesMenu;
+    private MilestonesMenu    milestonesMenu;
+    private OpeningAmountMenu amountMenu;
 
     public CrateManager(@NotNull CratesPlugin plugin) {
         super(plugin);
@@ -60,6 +64,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         this.crateMap = new HashMap<>();
         this.previewMap = new HashMap<>();
         this.previewCooldown = new HashMap<>();
+        this.batchRewards = new HashMap<>();
     }
 
     @Override
@@ -144,6 +149,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         if (Config.isMilestonesEnabled()) {
             this.milestonesMenu = new MilestonesMenu(this.plugin);
         }
+        this.amountMenu = new OpeningAmountMenu(this.plugin);
     }
 
     private void loadCrates() {
@@ -219,6 +225,8 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         Arrays.asList(EffectModel.values()).forEach(model -> model.getEffect().reset());
 
         if (this.milestonesMenu != null) this.milestonesMenu.clear();
+        if (this.amountMenu != null) this.amountMenu.clear();
+        this.batchRewards.clear();
 
         this.previewMap.values().forEach(ConfigMenu::clear);
         this.previewMap.clear();
@@ -419,24 +427,117 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         }
 
         if (action == InteractType.CRATE_OPEN || action == InteractType.CRATE_MASS_OPEN) {
-            OpenSettings settings = new OpenSettings().setSkipAnimation(action == InteractType.CRATE_MASS_OPEN);
+            // Port of 6.4.0 / 7.0.0: fast open (sneak) opens the max. amount instantly,
+            // a normal open shows the amount selector when 2+ crates can be opened at once.
+            boolean fastOpen = action == InteractType.CRATE_MASS_OPEN;
+            boolean canBatch = player.hasPermission(Perms.MASS_OPEN);
+            int maxAmount = canBatch ? this.countMaxOpenings(player, source) : 1;
 
-            int keys = plugin.getKeyManager().getKeysAmount(player, crate);
-            int openings = action == InteractType.CRATE_MASS_OPEN && crate.isKeyRequired() ? Math.max(1, keys) : 1;
-            int massLimit = Math.max(1, Config.CRATE_MASS_OPENING_LIMIT.get());
-            if (openings > massLimit) {
-                openings = massLimit;
+            if (fastOpen) {
+                this.batchOpen(player, source, maxAmount, true);
+                return;
             }
 
-            for (int spent = 0; spent < openings; spent++) {
+            if (maxAmount >= 2 && Config.CRATE_AMOUNT_SELECTOR_ENABLED.get() && this.amountMenu != null) {
+                this.amountMenu.open(player, source, maxAmount);
+                return;
+            }
+
+            this.batchOpen(player, source, 1, false);
+        }
+    }
+
+    /**
+     * Port of 6.4.0 Cost#countMaxOpenings: how many times the player can open this crate right now
+     * (keys, crate items, open costs, cooldown), capped by the mass opening limit. At least 1, so a failed
+     * open still shows the proper error message.
+     */
+    public int countMaxOpenings(@NotNull Player player, @NotNull CrateSource source) {
+        Crate crate = source.getCrate();
+        int max = Math.max(1, Config.CRATE_MASS_OPENING_LIMIT.get());
+
+        ItemStack sourceItem = source.getItem();
+        if (sourceItem != null) {
+            max = Math.min(max, sourceItem.getAmount());
+        }
+        if (crate.isKeyRequired()) {
+            max = Math.min(max, this.plugin.getKeyManager().getKeysAmount(player, crate));
+        }
+        if (sourceItem == null && !crate.isKeyRequired()) {
+            max = 1; // Free crate block: one at a time, like 5.3.3 mass open.
+        }
+
+        if (!crate.hasCostBypassPermisssion(player)) {
+            for (var entry : crate.getOpenCostMap().entrySet()) {
+                double cost = entry.getValue();
+                if (cost <= 0D) continue;
+
+                int affordable = (int) Math.floor(entry.getKey().getHandler().getBalance(player) / cost);
+                max = Math.min(max, affordable);
+            }
+        }
+
+        if (crate.hasOpenCooldown() && !crate.hasCooldownBypassPermission(player)) {
+            max = Math.min(max, 1);
+        }
+
+        return Math.max(1, max);
+    }
+
+    /**
+     * Opens the crate several times in a row. With 2+ openings rewards are announced in one summary
+     * (6.4.0 merged reward messages of one opening into one message; here: of one batch).
+     */
+    public void batchOpen(@NotNull Player player, @NotNull CrateSource source, int amount, boolean skipAnimation) {
+        Crate crate = source.getCrate();
+        Block block = source.getBlock();
+        OpenSettings settings = new OpenSettings().setSkipAnimation(skipAnimation);
+
+        boolean summary = amount > 1 && skipAnimation && Config.CRATE_BATCH_SUMMARY_ENABLED.get();
+        if (summary) {
+            this.batchRewards.put(player.getUniqueId(), new LinkedHashMap<>());
+        }
+
+        int opened = 0;
+        try {
+            for (int spent = 0; spent < amount; spent++) {
                 if (!this.openCrate(player, source, settings)) {
                     if (spent == 0 && block != null && crate.isPushbackEnabled()) {
                         player.setVelocity(player.getEyeLocation().getDirection().setY(Config.CRATE_PUSHBACK_Y.get()).multiply(Config.CRATE_PUSHBACK_MULTIPLY.get()));
                     }
                     break;
                 }
+                opened++;
             }
         }
+        finally {
+            if (summary) {
+                Map<String, Integer> rewards = this.batchRewards.remove(player.getUniqueId());
+                if (opened > 0 && rewards != null && !rewards.isEmpty()) {
+                    List<String> entries = new ArrayList<>();
+                    rewards.forEach((name, count) -> entries.add(Lang.CRATE_OPEN_BATCH_ENTRY.getString()
+                        .replace(Placeholders.GENERIC_AMOUNT, NumberUtil.format(count))
+                        .replace(Placeholders.REWARD_NAME, name)));
+
+                    Lang.CRATE_OPEN_BATCH_SUMMARY.getMessage()
+                        .replace(crate.replacePlaceholders())
+                        .replace(Placeholders.GENERIC_AMOUNT, NumberUtil.format(opened))
+                        .replace(Placeholders.GENERIC_ENTRY, entries)
+                        .send(player);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return true if the reward is collected for a batch summary (so its own message must be skipped).
+     */
+    public boolean collectBatchReward(@NotNull Player player, @NotNull Reward reward) {
+        Map<String, Integer> rewards = this.batchRewards.get(player.getUniqueId());
+        if (rewards == null) return false;
+
+        rewards.merge(reward.getName(), 1, Integer::sum);
+        return true;
     }
 
     public boolean openCrate(@NotNull Player player, @NotNull CrateSource source, @NotNull OpenSettings settings) {

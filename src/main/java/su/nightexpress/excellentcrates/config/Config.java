@@ -119,6 +119,20 @@ public class Config {
         "Especially if crate contains rewards with commands of other plugins."
     );
 
+    public static final ConfigValue<Boolean> CRATE_AMOUNT_SELECTOR_ENABLED = ConfigValue.create("Crate.Amount_Selector.Enabled",
+        true,
+        "When 'true', a normal crate open (RIGHT click by default) shows a GUI to choose how many crates to open,",
+        "but only when the player can open 2 or more at once (keys, crate items, costs, cooldown).",
+        "Sneak click (CRATE_MASS_OPEN action) skips the GUI and opens the max. amount instantly.",
+        "Needs '" + "excellentcrates.massopen" + "' permission (given by default)."
+    );
+
+    public static final ConfigValue<Boolean> CRATE_BATCH_SUMMARY_ENABLED = ConfigValue.create("Crate.Batch_Summary.Enabled",
+        true,
+        "When 'true', opening several crates at once sends one summary message",
+        "instead of one message per reward."
+    );
+
     public static final ConfigValue<Long> CRATE_PREVIEW_COOLDOWN = ConfigValue.create("Crate.Preview_Cooldown",
         2500L,
         "Sets cooldown (in milliseconds) for crate preview by clicking crate block(s).",
