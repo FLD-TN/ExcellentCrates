@@ -1,0 +1,15 @@
+Name: '<#F2F2F2>Key Thường</#F2F2F2>'
+Virtual: false
+Item:
+  Material: TRIPWIRE_HOOK
+  Amount: 1
+  Name: '<#F2F2F2>Key Thường</#F2F2F2>'
+  Lore:
+  - '<#BFC7D5>Dùng để mở </#BFC7D5><#F2F2F2>Crate Thường</#F2F2F2>'
+  - ''
+  - '<#555555>[</#555555><#7CFC9A>Chuột phải vào crate để mở</#7CFC9A><#555555>]</#555555>'
+  Enchants:
+    feather_falling: 1
+  Item_Flags:
+  - HIDE_ENCHANTS
+  Unbreakable: false

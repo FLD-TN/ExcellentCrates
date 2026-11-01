@@ -1,0 +1,97 @@
+Settings:
+  Title: '<#3A3A3A>Xem trước: </#3A3A3A>%crate_name%'
+  Size: 54
+  Inventory_Type: CHEST
+  Auto_Refresh: 0
+Reward:
+  Hide_Drained_Rewards: false
+  Slots: '11,12,13,14,15,16,20,21,22,23,24,25,29,30,31,32,33,34,38,39,40,41,42,43'
+Content:
+  layer_one:
+    Priority: 0
+    Type: default
+    Slots: '0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44'
+    Item:
+      Material: RED_STAINED_GLASS_PANE
+      Name: ' '
+  layer_two:
+    Priority: 0
+    Type: default
+    Slots: '45,46,47,48,49,50,51,52,53'
+    Item:
+      Material: BLACK_STAINED_GLASS_PANE
+      Name: ' '
+  rarity_common:
+    Priority: 0
+    Type: default
+    Slots: '10'
+    Item:
+      Material: PLAYER_HEAD
+      Head_Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjRiOTUzYjJjMGU5NTI1NzRmMWVkMjljODFlODJlNTNiY2RiMWJhNjgzMjU5YzIwZGFlZWY3ZDU1NGEyYTc5OCJ9fX0=
+      Name: '<#EFA18A>Quà thường</#EFA18A>'
+      Lore:
+      - '<#BFC7D5>Phần thưởng ở hàng này</#BFC7D5>'
+      - '<#BFC7D5>thuộc nhóm </#BFC7D5><#EFA18A>Thường</#EFA18A>'
+  rarity_uncommon:
+    Priority: 0
+    Type: default
+    Slots: '19'
+    Item:
+      Material: PLAYER_HEAD
+      Head_Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGJhNTU2NzFmOTdmZjNiZmM1YmUzMzVhZTkyY2Q5NzQ5YWJkNjE5ZTdhZmMyYTY2NzM1OTdiODBiNzU1Yzc0MSJ9fX0=
+      Name: '<#91FF1C>Quà hiếm</#91FF1C>'
+      Lore:
+      - '<#BFC7D5>Phần thưởng ở hàng này</#BFC7D5>'
+      - '<#BFC7D5>thuộc nhóm </#BFC7D5><#91FF1C>Hiếm</#91FF1C>'
+  rarity_rare:
+    Priority: 0
+    Type: default
+    Slots: '28'
+    Item:
+      Material: PLAYER_HEAD
+      Head_Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM3Yjk2YTQ1YThmMGM2ZmQ3ZGZhYjJhODVlMWEzODRkYWNhNGI4MDZlYjg5MmE4N2UyN2Y1MmE5ZjkxYzA4NCJ9fX0=
+      Name: '<#7290CF>Quà quý</#7290CF>'
+      Lore:
+      - '<#BFC7D5>Phần thưởng ở hàng này</#BFC7D5>'
+      - '<#BFC7D5>thuộc nhóm </#BFC7D5><#7290CF>Quý</#7290CF>'
+  rarity_epic:
+    Priority: 0
+    Type: default
+    Slots: '37'
+    Item:
+      Material: PLAYER_HEAD
+      Head_Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Y2NmY3ZjAzMTI1Y2Y1NDczMzY5NmYzNjMyZjBkOWU2NDcwYmFhYjg0OTg0N2VhNWVhMmQ3OTE1NmFkMGY0MCJ9fX0=
+      Name: '<#B07CFF>Quà sử thi</#B07CFF>'
+      Lore:
+      - '<#BFC7D5>Phần thưởng ở hàng này</#BFC7D5>'
+      - '<#BFC7D5>thuộc nhóm </#BFC7D5><#B07CFF>Sử Thi</#B07CFF>'
+  next:
+    Priority: 5
+    Type: page_next
+    Slots: '50'
+    Item:
+      Material: LIME_SHULKER_BOX
+      Name: '<#7CFC9A>Trang sau</#7CFC9A>'
+      Lore:
+      - ''
+      - '<#555555>[</#555555><#7CFC9A>Chuột trái để sang trang</#7CFC9A><#555555>]</#555555>'
+  previous:
+    Priority: 5
+    Type: page_previous
+    Slots: '48'
+    Item:
+      Material: RED_SHULKER_BOX
+      Name: '<#FF8A8A>Trang trước</#FF8A8A>'
+      Lore:
+      - ''
+      - '<#555555>[</#555555><#FF8A8A>Chuột trái để quay lại</#FF8A8A><#555555>]</#555555>'
+  close:
+    Priority: 5
+    Type: close
+    Slots: '49'
+    Item:
+      Material: BARRIER
+      Name: '<#FF6B6B>Đóng</#FF6B6B>'
+      Lore:
+      - ''
+      - '<#555555>[</#555555><#FF8A8A>Chuột trái để đóng</#FF8A8A><#555555>]</#555555>'

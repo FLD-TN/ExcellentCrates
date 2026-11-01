@@ -1,0 +1,15 @@
+Name: '<#FFBB00>Key Huyền Thoại</#FFBB00>'
+Virtual: false
+Item:
+  Material: TRIPWIRE_HOOK
+  Amount: 1
+  Name: '<#FFBB00>Key Huyền Thoại</#FFBB00>'
+  Lore:
+  - '<#BFC7D5>Dùng để mở </#BFC7D5><#FFBB00>Crate Huyền Thoại</#FFBB00>'
+  - ''
+  - '<#555555>[</#555555><#7CFC9A>Chuột phải vào crate để mở</#7CFC9A><#555555>]</#555555>'
+  Enchants:
+    feather_falling: 1
+  Item_Flags:
+  - HIDE_ENCHANTS
+  Unbreakable: false

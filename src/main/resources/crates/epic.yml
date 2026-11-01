@@ -1,0 +1,564 @@
+Name: '<#EE82EE>Crate Sử Thi</#EE82EE>'
+Animation_Config: enclosing
+Preview_Config: epic_preview
+Permission_Required: false
+Opening:
+  Cooldown: 0
+  Cost: {}
+Key:
+  Required: true
+  Ids:
+  - epic
+Item:
+  Material: PINK_STAINED_GLASS_PANE
+  Name: '<#EE82EE>Crate Sử Thi</#EE82EE>'
+Block:
+  Positions: []
+  Pushback:
+    Enabled: true
+  Hologram:
+    Enabled: true
+    Y_Offset: 0.0
+    Text:
+    - '<#EE82EE>Crate Sử Thi</#EE82EE>'
+    - '<#BFC7D5>Bạn có </#BFC7D5><#FFD166>%excellentcrates_keys_epic%</#FFD166><#BFC7D5> key</#BFC7D5>'
+    - '<#555555>[</#555555><#7FDBFF>Chuột trái để xem quà</#7FDBFF><#555555>]</#555555>'
+    - '<#555555>[</#555555><#7CFC9A>Chuột phải để mở</#7CFC9A><#555555>]</#555555>'
+  Effect:
+    Model: HELIX
+    Particle:
+      Name: DUST
+      Color: '255,0,255'
+      Size: 1.5
+Rewards:
+  List:
+    '1':
+      Name: '<#EFA18A>Mũ Sắt</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ldlkmspb3e9gmct1qd5p6urivd1imorb5eg5000rkc5jg60068hgmqob7ck0000000c00ii39chikcr31ctpg0000085001r4d5pn0r31f440012ec5mma02jfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24je5l4g57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Commands: []
+      Items:
+      - '5000080016ip002lmmirj5cdp62pjk79kn4rrebtk6ar3dclq0k003ehgme0o00p262rb1ctig0000005001r4d5pn0r31f440012ec5mma02jfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24je5l4g57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '2':
+      Name: '<#EFA18A>Giáp Sắt</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: a0000g002d5i006bdd5n6aoric5j78ej9e9nmsnr3d1in6t3gdhgn8p8a001n8ob70c00ch31dlgmep80000000o01546ip358pm62prj000000ga003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0493mjgt1e0g57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080
+      Commands: []
+      Items:
+      - '1800020009km800pdlkmspb3e9gmct1qd5p6urivcdk6asrke1m62t3518006t31cs1g01i4c5mm2pr50000000a003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0493mjgt1e0g57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '3':
+      Name: '<#EFA18A>Quần Sắt</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ndlkmspb3e9gmct1qd5p6urivdhimepr9dpjn62g00dq62po300348obdc5jma0000000600991km8pa6dhgmeso0000042g00ti6isrgdhgni2000h762rb501b7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812a5qu3el7dog57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Commands: []
+      Items:
+      - '5000080016ip002tmmirj5cdp62pjk79kn4rrebtm6apr7d5n6esoa001n8ob70c00ch31dlgmep80000002g00ti6isrgdhgni2000h762rb501b7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812a5qu3el7dog57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '4':
+      Name: '<#EFA18A>Giày Sắt</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: a0000g002d5i0053dd5n6aoric5j78ej9e9nmsnr2dtnn8soa001n8ob70c00ch31dlgmep80000000o01546ip358pm62prj000000ga003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0493mjgt0f4g57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080
+      Commands: []
+      Items:
+      - '1800020009km800kdlkmspb3e9gmct1qd5p6urivc9nmut3j18006t31cs1g01i4c5mm2pr50000000a003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0493mjgt0f4g57odqltq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '5':
+      Name: '<#EFA18A>Kiếm Sắt</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: k00010004qb400a6qqbeclhn4ob6egt6isjfdpfn6trfe9i0k003ehgme2801h2msor8c5n78rb5dpq762g00000420009km800jdlkmspb3e9gmct1qedk62sjgdpin6so2001motjc001g020009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg00600a003m8qbje1m62u880024sobdck05cup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0495mjodqntmi0kv1nann88hc40h66rrcdtp24eh048hkahi164s428hc40h6it31dhkm68hq41j62r3jclulqv800c00ch31dlgmep80000000o01546ip358pm62prj000000g00400agrfeln78080
+      Commands: []
+      Items:
+      - '2g0004000j9cg018rb9dpim6sj1cpq3kqbidtn5usrndtp682g00dq62po300348obdc5jma0000000k007chkn6s3cc5sgg0049pgmqp80apti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208ibd7grlfrd419u3elfegh2o812cdnmorri48t208h38l342c9o84h2o812d5q62r39cch3k836c5m76pbtblug02801h2msor8c5n78rb5dpq762g00000420009km800jdlkmspb3e9gmct1qedk62sjgdpin6so2001motjc001g020009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0060000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '6':
+      Name: '<#EFA18A>Cúp Sắt</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002pmmirj5cdp62pjk79kn4rrebto6iorbc5s6a2g00dq62po90064arj3d1gmst3dcln78soa000000g80016ip002hmmirj5cdp62pjk79imcpj9cdkmarj3f41000rcepm0018010004qb400a6qqbeclhn4ob6egt7arj2e9im2qr9dpjg4003dhr6o003005001r4d5pn0r31f440012ec5mma02kfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24gu3n9o20kv1nann88hc40h66rrcdtp24eh048hkahi164s428hc40h6it31dhkm68hq41j62r3jclulqv800c00ch31dlgmep80000000o01546ip358pm62prj000000g00400agrfeln78080'
+      Commands: []
+      Items:
+      - k00010004qb400b6qqbeclhn4ob6egt6isjfdpfn0qb3ddgngp8a001n8ob70c00ch31dlgmep80000002g00ti6isrgdhgni2000h762rb501a7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k8128f1rks10afgrlbrk48m208j3dtm6ush278g248q58p0j2e2148m208j9ehgmoqb348t20pj1dhpmavatfk00i00c8ln66q31dpq6qpbeehpgk0000010g002d5i0053dd5n6aoric5j78ej5cpj6ior9cln66u82001motjc002g020009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0060000400agrfeln78080
+      Ignored_For_Permissions: []
+    '7':
+      Name: '<#91FF1C>Yên Ngựa</#91FF1C>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: k00010004qb40086qqbeclhn4ob6egt76ob4chm6a2g00dq62poa003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh049cs7aje4176fodrm5gi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080
+      Commands: []
+      Items:
+      - k00010004qb40086qqbeclhn4ob6egt76ob4chm6a2g00dq62poa003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh049cs7aje4176fodrm5gi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080
+      Ignored_For_Permissions: []
+    '8':
+      Name: '<#91FF1C>Bật Lửa</#91FF1C>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800pdlkmspb3e9gmct1qcpm6irjkbtgmsp2vedq6apbc18006t31cs1g01i4c5mm2pr50000000a003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0491e3eldegg4podrllgi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Commands: []
+      Items:
+      - '1800020009km800pdlkmspb3e9gmct1qcpm6irjkbtgmsp2vedq6apbc18006t31cs1g01i4c5mm2pr50000000a003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh0491e3eldegg4podrllgi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '9':
+      Name: '<#91FF1C>Ống Nhòm</#91FF1C>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800idlkmspb3e9gmct1qedo7iprcc5pn62g00dq62poa003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh04bgrn43ecsg4sq63m9mi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Commands: []
+      Items:
+      - '1800020009km800idlkmspb3e9gmct1qedo7iprcc5pn62g00dq62poa003m8qbje1m62u880024sobdck05aup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh04bgrn43ecsg4sq63m9mi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '10':
+      Name: '<#91FF1C>Cần Câu</#91FF1C>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ldlkmspb3e9gmct1qcpkn6q39dpjlusjfcg5000rkc5jg60068hgmqob7ck0000001800ep39edo6oobp10008jj1dlig0l3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h47odqktn20gu3k9qi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Commands: []
+      Items:
+      - '1800020009km800ldlkmspb3e9gmct1qcpkn6q39dpjlusjfcg5000rkc5jg60068hgmqob7ck0000001800ep39edo6oobp10008jj1dlig0l3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h47odqktn20gu3k9qi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '11':
+      Name: '<#91FF1C>Pháo Hoa</#91FF1C>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: false
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: k00010004qb400cmqqbeclhn4ob6egt6cqbiclrmusjbbtp6uorbclq0k003ehgme2g01536isj5etnn4qrj0400chjcd5jmgt03005001r4d5pn0r31f440012ec5mma02jfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24k38oegmu828dtgi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00
+      Commands: []
+      Items:
+      - k00010004qb400cmqqbeclhn4ob6egt6cqbiclrmusjbbtp6uorbclq0k003ehgme2g01536isj5etnn4qrj0400chjcd5jmgt03005001r4d5pn0r31f440012ec5mma02jfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24k38oegmu828dtgi4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00
+      Ignored_For_Permissions: []
+    '12':
+      Name: '<#91FF1C>Táo Vàng</#91FF1C>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: k00010004qb400b6qqbeclhn4ob6egt6errcchimsnr1e1o6op8a001n8ob71800ep39edo6oobp10008jj1dlig0l3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h59gt1dsg5dgt0dpji4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100
+      Commands: []
+      Items:
+      - k00010004qb400b6qqbeclhn4ob6egt6errcchimsnr1e1o6op8a001n8ob71800ep39edo6oobp10008jj1dlig0l3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h59gt1dsg5dgt0dpji4b1049hmur3fe8h3k8124csj2hi6651i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100
+      Ignored_For_Permissions: []
+    '13':
+      Name: '<#FFFFFF>x4</#FFFFFF> <#354C7C>Trứng Heo</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002tmmirj5cdp62pjk79o6ipqvedo62trebtimepoa001n8ob71800ep39edo6oobp10008jj1dlig12rr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h7gd1048m208j3dtm6ush278g248q68p34chi648m208j9ehgmoqb348t20pj1dhpmav9c41ti4t35f1q24eh049a75odrl5n6e828clni4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Commands: []
+      Items:
+      - '5000080016ip002tmmirj5cdp62pjk79o6ipqvedo62trebtimepoa001n8ob71800ep39edo6oobp10008jj1dlig12rr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h7gd1048m208j3dtm6ush278g248q68p34chi648m208j9ehgmoqb348t20pj1dhpmav9c41ti4t35f1q24eh049a75odrl5n6e828clni4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Ignored_For_Permissions: []
+    '14':
+      Name: '<#FFFFFF>x4</#FFFFFF> <#354C7C>Trứng Bò</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002tmmirj5cdp62pjk79hmutqvedo62trebtimepoa001n8ob71800ep39edo6oobp10008jj1dlig12rr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h7gd1048m208j3dtm6ush278g248q68p34chi648m208j9ehgmoqb348t20pj1dhpmav9c41ti4t35f1q24eh049a75odrl5n6e822oep24b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Commands: []
+      Items:
+      - '5000080016ip002tmmirj5cdp62pjk79hmutqvedo62trebtimepoa001n8ob71800ep39edo6oobp10008jj1dlig12rr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h7gd1048m208j3dtm6ush278g248q68p34chi648m208j9ehgmoqb348t20pj1dhpmav9c41ti4t35f1q24eh049a75odrl5n6e822oep24b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Ignored_For_Permissions: []
+    '15':
+      Name: '<#FFFFFF>x4</#FFFFFF> <#354C7C>Trứng Ngựa</#354C7C>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip0035mmirj5cdp62pjk79k6usjjclfn6s31etn5upb7cs5000rkc5jgk007chkn6s3cc5sgg0049pgmqp80hpti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208jo6gg24b1049hmur3fe8h3k8124d34chi68p324b1049kn8obcd5hi4eh0cpgmosr5fkm20up2ehingt1278g24l3is6tqirj74176fodrm5gi4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Commands: []
+      Items:
+      - '5000080016ip0035mmirj5cdp62pjk79k6usjjclfn6s31etn5upb7cs5000rkc5jgk007chkn6s3cc5sgg0049pgmqp80hpti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208jo6gg24b1049hmur3fe8h3k8124d34chi68p324b1049kn8obcd5hi4eh0cpgmosr5fkm20up2ehingt1278g24l3is6tqirj74176fodrm5gi4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Ignored_For_Permissions: []
+    '16':
+      Name: '<#354C7C>Thỏi Sắt</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: k00010004qb400a6qqbeclhn4ob6egt6isjfdpfmirj7dtq0k003ehgme2g00ti6isrgdhgni2000h762rb501b7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812ahke3esfd4g57odqltq24b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00
+      Commands: []
+      Items:
+      - k00010004qb400a6qqbeclhn4ob6egt6isjfdpfmirj7dtq0k003ehgme2g00ti6isrgdhgni2000h762rb501b7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812ahke3esfd4g57odqltq24b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00
+      Ignored_For_Permissions: []
+    '17':
+      Name: '<#354C7C>Thỏi Vàng</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: k00010004qb400a6qqbeclhn4ob6egt6errcchfmirj7dtq0k003ehgme2g00ti6isrgdhgni2000h762rb501b7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812ahke3esfd4g5dgt0dpji4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00
+      Commands: []
+      Items:
+      - k00010004qb400a6qqbeclhn4ob6egt6errcchfmirj7dtq0k003ehgme2g00ti6isrgdhgni2000h762rb501b7m8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812ahke3esfd4g5dgt0dpji4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00
+      Ignored_For_Permissions: []
+    '18':
+      Name: '<#354C7C>Thỏi Đồng</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01crb9dpim6sj1cpq3korfe1o6asivd5n6errk18006t31cs5001r4d5pn0r31f440012ec5mma02ofch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24l38s6touq90oi8e3esjdpji4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00'
+      Commands: []
+      Items:
+      - '2g0004000j9cg01crb9dpim6sj1cpq3korfe1o6asivd5n6errk18006t31cs5001r4d5pn0r31f440012ec5mma02ofch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24l38s6touq90oi8e3esjdpji4b1049hmur3fe8h3k8124cpjad236t1i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78g00'
+      Ignored_For_Permissions: []
+    '19':
+      Name: '<#B07CFF>Key Thần Thoại</#B07CFF>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ndlkmspb3e9gmct1qehp6is3nd5p6anr8dtnmm2g00dq62poa00950tb2dhkm6gjlddlmit2mc5m7apbj1001opbocdimor35dpq66sj1ehin6ej3e9gn8pavddinibj9cg00crbpehk6ioo01400ohbecdk62rjkdlimst3j1800000110004qb400cmqqbeclhn4ob6egt6cpb1ehk6asivcpgmor39dpjg4003dhr6o001005001r4d5pn0r31f440012ec5mma02sfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24ir5f4g58q71najms82kd1nu3el1d4h2o812cdnmorri48t208h388o3egq68oh2o812d5q62r39cch3k836c5m76pbtblug00o01546ip358pm62prj00000g800400agrfeln78080'
+      Commands:
+      - 'crate key give %player_name% mythic 1 -s'
+      Items: []
+      Ignored_For_Permissions: []
+    '20':
+      Name: '<#FFBB00>Key Huyền Thoại</#FFBB00>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002tmmirj5cdp62pjk79q74qbgetkn4pavd1nmuqoa001n8ob718014k3lc9m6ioq2ellmmqbkapgmotb5ec400735f1hmar3ccln78oric5q6aspqcdp62t35btlmau9ed5i002bccljmarj4c5p7i0090064arj3d1gmst3dcln78soa000000880016ip0035mmirj5cdp62pjk79j6aobkd1in4nr6c5m6oqbecs1000rcepm000801800ep39edo6oobp10008jj1dlig0nbr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h4mpbp4147auf1ne0ms82kd1nu3el1d4h2o812cdnmorri48t208h38p344ghg60h2o812d5q62r39cch3k836c5m76pbtblug00o01546ip358pm62prj00000g800400agrfeln78080'
+      Commands:
+      - 'crate key give %player_name% legendary 1 -s'
+      Items: []
+      Ignored_For_Permissions: []
+    '21':
+      Name: '<#F04337>Key Vinh Quang</#F04337>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ndlkmspb3e9gmct1qehp6is3nd5p6anr8dtnmm2g00dq62poa00950tb2dhkm6gjlddlmit2mc5m7apbj1001opbocdimor35dpq66sj1ehin6ej3e9gn8pavddinibj9cg00aprcdtp7i0090064arj3d1gmst3dcln78soa000000880016ip0035mmirj5cdp62pjk79j6aobkd1in4nr6c5m6oqbecs1000rcepm000801800ep39edo6oobp10008jj1dlig0m3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h4mpbp41b6irj8418naobecsh2o812cdnmorri48t208h38oo38cpj6sh2o812d5q62r39cch3k836c5m76pbtblug00o01546ip358pm62prj00000g800400agrfeln78080'
+      Commands:
+      - 'crate key give %player_name% glory 1 -s'
+      Items: []
+      Ignored_For_Permissions: []
+    '22':
+      Name: '<#354C7C>+2 phút bay</#354C7C>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg012rb9dpim6sj1cpq3kpj5c5q6gpbi18006t31cs5001r4d5pn0r31f440012ec5mma02mfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24api41o6hgtqegg64obp48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'tf add %player_name% 2m'
+      Items: []
+      Ignored_For_Permissions: []
+    '23':
+      Name: '<#354C7C>+3 phút bay</#354C7C>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg012rb9dpim6sj1cpq3kpj5c5q6gpbi18006t31cs5001r4d5pn0r31f440012ec5mma02mfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24apj41o6hgtqegg64obp48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'tf add %player_name% 3m'
+      Items: []
+      Ignored_For_Permissions: []
+    '24':
+      Name: '<#354C7C>+5 phút bay</#354C7C>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg012rb9dpim6sj1cpq3kpj5c5q6gpbi18006t31cs5001r4d5pn0r31f440012ec5mma02mfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24apl41o6hgtqegg64obp48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'tf add %player_name% 5m'
+      Items: []
+      Ignored_For_Permissions: []
+Milestones:
+  Repeatable: false

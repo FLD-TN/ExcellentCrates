@@ -40,6 +40,39 @@ public class Creator {
         if (!dirMenus.exists() && dirMenus.mkdirs()) {
             this.createMenus();
         }
+
+        this.installDefaultPack();
+    }
+
+    /**
+     * BoxPvP default pack (8 crates + keys + previews, converted from the purchased 4.x config).
+     * Installed only while the server has no crate file yet; existing files are never overwritten,
+     * so deleting/editing crates later is safe.
+     */
+    private void installDefaultPack() {
+        File dirCrates = new File(plugin.getDataFolder().getAbsolutePath(), Config.DIR_CRATES);
+        File[] existing = dirCrates.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (existing != null && existing.length > 0) return;
+
+        int installed = 0;
+        for (String id : DEFAULT_PACK) {
+            installed += this.copyIfMissing("crates/" + id + ".yml");
+            installed += this.copyIfMissing("keys/" + id + ".yml");
+            installed += this.copyIfMissing("previews/" + id + "_preview.yml");
+        }
+        if (installed > 0) {
+            this.plugin.info("Installed default crate pack (" + installed + " files).");
+        }
+    }
+
+    private static final String[] DEFAULT_PACK = {"common", "uncommon", "rare", "epic", "legendary", "mythic", "glory", "vote"};
+
+    private int copyIfMissing(@NotNull String path) {
+        File file = new File(plugin.getDataFolder(), path);
+        if (file.exists() || this.plugin.getResource(path) == null) return 0;
+
+        this.plugin.saveResource(path, false);
+        return 1;
     }
 
     public void createPreviews() {

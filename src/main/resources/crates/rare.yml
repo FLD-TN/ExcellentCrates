@@ -1,0 +1,433 @@
+Name: '<#6F9CFF>Crate Quý</#6F9CFF>'
+Animation_Config: tnt_ignite
+Preview_Config: rare_preview
+Permission_Required: false
+Opening:
+  Cooldown: 0
+  Cost: {}
+Key:
+  Required: true
+  Ids:
+  - rare
+Item:
+  Material: BLUE_STAINED_GLASS_PANE
+  Name: '<#6F9CFF>Crate Quý</#6F9CFF>'
+Block:
+  Positions: []
+  Pushback:
+    Enabled: true
+  Hologram:
+    Enabled: true
+    Y_Offset: 0.0
+    Text:
+    - '<#6F9CFF>Crate Quý</#6F9CFF>'
+    - '<#BFC7D5>Bạn có </#BFC7D5><#FFD166>%excellentcrates_keys_rare%</#FFD166><#BFC7D5> key</#BFC7D5>'
+    - '<#555555>[</#555555><#7FDBFF>Chuột trái để xem quà</#7FDBFF><#555555>]</#555555>'
+    - '<#555555>[</#555555><#7CFC9A>Chuột phải để mở</#7CFC9A><#555555>]</#555555>'
+  Effect:
+    Model: VORTEX
+    Particle:
+      Name: DUST
+      Color: '0,0,255'
+      Size: 1.5
+Rewards:
+  List:
+    '1':
+      Name: '<#EFA18A>Khối Vàng Thô</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01grb9dpim6sj1cpq3ksj1etfmerrcchfm4r3fcdlgk003ehgme2g00ti6isrgdhgni2000h762rb501dnm8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k8129dke3eshd4g5dgt0dpji0l38oeq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78800'
+      Commands: []
+      Items:
+      - '2g0004000j9cg01grb9dpim6sj1cpq3ksj1etfmerrcchfm4r3fcdlgk003ehgme2g00ti6isrgdhgni2000h762rb501dnm8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k8129dke3eshd4g5dgt0dpji0l38oeq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78800'
+      Ignored_For_Permissions: []
+    '2':
+      Name: '<#EFA18A>Khối Sắt Thô</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01grb9dpim6sj1cpq3ksj1etfmisjfdpfm4r3fcdlgk003ehgme2g00ti6isrgdhgni2000h762rb501dnm8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k8129dke3eshd4g57odqltq20l38oeq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78800'
+      Commands: []
+      Items:
+      - '2g0004000j9cg01grb9dpim6sj1cpq3ksj1etfmisjfdpfm4r3fcdlgk003ehgme2g00ti6isrgdhgni2000h762rb501dnm8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k8129dke3eshd4g57odqltq20l38oeq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78800'
+      Ignored_For_Permissions: []
+    '3':
+      Name: '<#EFA18A>Khối Đồng Thô</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: a0000g002d5i006jdd5n6aoric5j78ejic5rluorfe1o6asivc9m6uorb18006t31cs5001r4d5pn0r31f440012ec5mma02tfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24ir8s6tp2q90oi8e3esjdpji0l38oeq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78800
+      Commands: []
+      Items:
+      - a0000g002d5i006jdd5n6aoric5j78ejic5rluorfe1o6asivc9m6uorb18006t31cs5001r4d5pn0r31f440012ec5mma02tfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24ir8s6tp2q90oi8e3esjdpji0l38oeq24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78800
+      Ignored_For_Permissions: []
+    '4':
+      Name: '<#EFA18A>Táo Vàng Phù Phép</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip0041mmirj5cdp62pjk79imsor8c5n78pb4btjmur34cln5uobge1m6a2g00dq62poa003m8qbje1m62u880024sobdck05uup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh049ac78bf41bc783ecsg50q63n4g50q63l5o24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Commands: []
+      Items:
+      - '5000080016ip0041mmirj5cdp62pjk79imsor8c5n78pb4btjmur34cln5uobge1m6a2g00dq62poa003m8qbje1m62u880024sobdck05uup2ehingt1278g248hc40h6au3ke9gi4eh0bdti4t35f1q24eh049ac78bf41bc783ecsg50q63n4g50q63l5o24b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '5':
+      Name: '<#FFFFFF>x4</#FFFFFF> <#EFA18A>Trứng Heo</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002tmmirj5cdp62pjk79o6ipqvedo62trebtimepoa001n8ob71800ep39edo6oobp10008jj1dlig12rr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h7gd1048m208j3dtm6ush278g248q68p34chi648m208j9ehgmoqb348t20pj1dhpmav9c41ti4t35f1q24eh049a75odrl5n6e828clni4b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Commands: []
+      Items:
+      - '5000080016ip002tmmirj5cdp62pjk79o6ipqvedo62trebtimepoa001n8ob71800ep39edo6oobp10008jj1dlig12rr49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h7gd1048m208j3dtm6ush278g248q68p34chi648m208j9ehgmoqb348t20pj1dhpmav9c41ti4t35f1q24eh049a75odrl5n6e828clni4b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Ignored_For_Permissions: []
+    '6':
+      Name: '<#FFFFFF>x2</#FFFFFF> <#EFA18A>Trứng Gấu Bắc Cực</#EFA18A>'
+      Weight: 25.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800udlkmspb3e9gmct1qe1nmoobibth6aobibtpn0obndpfmapr718006t31cs5001r4d5pn0r31f440012ec5mma04pfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24u1i40h2o812cdnmorri48t208h38p34chi68oh2o812d5q62r39cch3k836c5m76pbt5gg7m8jkcls788hq40h58sn1nekmspp08vgrl9bl411e3elfccg47odrm5hi4b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln780g0'
+      Commands: []
+      Items:
+      - '1800020009km800udlkmspb3e9gmct1qe1nmoobibth6aobibtpn0obndpfmapr718006t31cs5001r4d5pn0r31f440012ec5mma04pfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24u1i40h2o812cdnmorri48t208h38p34chi68oh2o812d5q62r39cch3k836c5m76pbt5gg7m8jkcls788hq40h58sn1nekmspp08vgrl9bl411e3elfccg47odrm5hi4b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln780g0'
+      Ignored_For_Permissions: []
+    '7':
+      Name: '<#55FF55>2.000$</#55FF55>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: false
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ldlkmspb3e9gmct1qctnmop2vdpqmepr5eg5000rkc5jgk007chkn6s3cc5sgg0049pgmqp80a1ti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208hi5oo30c1448m208j3dtm6ush278g248pl6l34cd9l48m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'eco give %player_name% 2000'
+      Items:
+      - '5000080016ip0039mmirj5cdp62pjk79p62oj2d5q5usrgc5rmsnr5ctjgk003ehgme2g00ti6isrgdhgni2000h762rb5026nm8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k812f0q208hc40h66rrcdtp24eh048hkchi68p34c8hc40h6it31dhkm68hq41j62r3jcluio83r49q6au3k48t208ikebgrnabecsg58q71ne7i4b1049hmur3fe8h3k8124d2kcg9h710i4b1049kn8obcd5hi4eh0cpgmosr5flenq0000400agrfeln78100'
+      Ignored_For_Permissions: []
+    '8':
+      Name: '<#55FF55>4.000$</#55FF55>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg014rb9dpim6sj1cpq3ksj1etfmerrccg5000rkc5jgk007chkn6s3cc5sgg0049pgmqp80a1ti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208hk5oo30c1448m208j3dtm6ush278g248pl6l34cd9l48m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'eco give %player_name% 4000'
+      Items: []
+      Ignored_For_Permissions: []
+    '9':
+      Name: '<#55FF55>7.000$</#55FF55>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002hmmirj5cdp62pjk79jmur34btkmsprfeg5000rkc5jgk007chkn6s3cc5sgg0049pgmqp80a1ti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208hn5oo30c1448m208j3dtm6ush278g248pl6l34cd9l48m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'eco give %player_name% 7000'
+      Items: []
+      Ignored_For_Permissions: []
+    '10':
+      Name: '<#91FF1C>Kiếm Cướp Bóc</#91FF1C>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip002lmmirj5cdp62pjk79pn8rreclfn6trfe9i0k003ehgme2801h2msor8c5n78rb5dpq762g00000620009km800hdlkmspb3e9gmct1qdhnmut39dpjg4003dhr6o005004000j9cg016rb9dpim6sj1cpq3ksr8c5p70rj5edpg4003dhr6o005004000j9cg018rb9dpim6sj1cpq3ktbec9p6aobbd5n6e0g00dm7cr000400k007chkn6s3cc5sgg0049pgmqp80blti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208ibd7grlfrd411sdc71nedn0822oepm68hc40h66rrcdtp24eh048hjica68ook68hc40h6it31dhkm68hq41j62r3jclulqv800c00ch31dlgmep80000000o01546ip358pm62prj000000g00400agrfeln78080'
+      Commands: []
+      Items:
+      - k00010004qb400amqqbeclhn4ob6egt76t3fdpilusrndtp682g00dq62po300348obdc5jma0000000k007chkn6s3cc5sgg0049pgmqp80blti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208ibd7grlfrd411sdc71nedn0822oepm68hc40h66rrcdtp24eh048hjica68ook68hc40h6it31dhkm68hq41j62r3jclulqv801400ohbecdk62rjkdlimst3j1800000310004qb4008mqqbeclhn4ob6egt6orrfehkmspo2001motjc002g020009km800jdlkmspb3e9gmct1qedk62sjgdpin6so2001motjc002g020009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0060000400agrfeln78080
+      Ignored_For_Permissions: []
+    '11':
+      Name: '<#FF0000>Danh hiệu Parrot</#FF0000>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '5000080016ip0029mmirj5cdp62pjk79n62rb5btq62poa001n8ob71800ep39edo6oobp10008jj1dlig0n3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h48obed0g6gqf1ne3na82gc5p74rrk48m208j3dtm6ush278g248q68oo30c1g48m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands:
+      - 'lp user %player_name% permission set tag.parrot'
+      Items: []
+      Ignored_For_Permissions: []
+    '12':
+      Name: '<#FF00FF>Danh hiệu Pig</#FF00FF>'
+      Weight: 10.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: a0000g002d5i004jdd5n6aoric5j78ejec5mmanrkc5jgk003ehgme2g00ti6isrgdhgni2000h762rb501cnm8jkcls788hq40h24b1049ingt3ic4h3k82rfch78pboegh3k8128hgmsq10d1ku3es7ekg50qb748m208j3dtm6ush278g248q68oo30hi648m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080
+      Commands:
+      - 'lp user %player_name% permission set tag.pig'
+      Items: []
+      Ignored_For_Permissions: []
+    '13':
+      Name: '<#F04337>Key Vinh Quang</#F04337>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ndlkmspb3e9gmct1qehp6is3nd5p6anr8dtnmm2g00dq62poa00950tb2dhkm6gjlddlmit2mc5m7apbj1001opbocdimor35dpq66sj1ehin6ej3e9gn8pavddinibj9cg00aprcdtp7i0090064arj3d1gmst3dcln78soa000000880016ip0035mmirj5cdp62pjk79j6aobkd1in4nr6c5m6oqbecs1000rcepm000801800ep39edo6oobp10008jj1dlig0m3r49q6au3k48t208h25gg24pboehp628hq41dnm8jkcls788hq40h4mpbp41b6irj8418naobecsh2o812cdnmorri48t208h38oo38cpj6sh2o812d5q62r39cch3k836c5m76pbtblug00o01546ip358pm62prj00000g800400agrfeln78080'
+      Commands:
+      - 'crate key give %player_name% glory 1 -s'
+      Items: []
+      Ignored_For_Permissions: []
+    '14':
+      Name: '<#EE82EE>Key Sử Thi</#EE82EE>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01erb9dpim6sj1cpq3kt3id5o7eqbiclfmgrrfdc5000rkc5jgk00ia1qm4r39cd17aqrbd5q5cobcelin62003hingor5dhm6arjkcdp62t35ect66sj1ehiluqr5f4n6ip000hin0qb3004g0325dphmgobeehmmarjkec500000044000j9cg01irb9dpim6sj1cpq3kpj5c5q6gpbibtj62r3cd5n6e0g00dm7cr000400k007chkn6s3cc5sgg0049pgmqp80apti4t35f1q24eh048h2o812cls78sj148t20mrr49q6au3k48t208ibclsi0kv1nemi0l38d4h2o812cdnmorri48t208h38l2jgci58kh2o812d5q62r39cch3k836c5m76pbtblug00o01546ip358pm62prj00000g800400agrfeln78080'
+      Commands:
+      - 'crate key give %player_name% epic 1 -s'
+      Items: []
+      Ignored_For_Permissions: []
+    '15':
+      Name: '<#B07CFF>Key Thần Thoại</#B07CFF>'
+      Weight: 3.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '1800020009km800ndlkmspb3e9gmct1qehp6is3nd5p6anr8dtnmm2g00dq62poa00950tb2dhkm6gjlddlmit2mc5m7apbj1001opbocdimor35dpq66sj1ehin6ej3e9gn8pavddinibj9cg00crbpehk6ioo01400ohbecdk62rjkdlimst3j1800000110004qb400cmqqbeclhn4ob6egt6cpb1ehk6asivcpgmor39dpjg4003dhr6o001005001r4d5pn0r31f440012ec5mma02sfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24ir5f4g58q71najms82kd1nu3el1d4h2o812cdnmorri48t208h388o3egq68oh2o812d5q62r39cch3k836c5m76pbtblug00o01546ip358pm62prj00000g800400agrfeln78080'
+      Commands:
+      - 'crate key give %player_name% mythic 1 -s'
+      Items: []
+      Ignored_For_Permissions: []
+    '16':
+      Name: '<#354C7C>100 EXP</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01mrb9dpim6sj1cpq3kpboe1in4qb5dphmanr2dtq78r3518006t31cs5001r4d5pn0r31f440012ec5mma02hfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24c9g60g4am2g48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands: []
+      Items:
+      - '2g0004000j9cg01mrb9dpim6sj1cpq3kpboe1in4qb5dphmanr2dtq78r3518006t31cs5001r4d5pn0r31f440012ec5mma02hfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24c9g60g4am2g48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '17':
+      Name: '<#354C7C>200 EXP</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01mrb9dpim6sj1cpq3kpboe1in4qb5dphmanr2dtq78r3518006t31cs5001r4d5pn0r31f440012ec5mma02hfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24chg60g4am2g48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands: []
+      Items:
+      - '2g0004000j9cg01mrb9dpim6sj1cpq3kpboe1in4qb5dphmanr2dtq78r3518006t31cs5001r4d5pn0r31f440012ec5mma02hfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24chg60g4am2g48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Ignored_For_Permissions: []
+    '18':
+      Name: '<#354C7C>500 EXP</#354C7C>'
+      Weight: 5.0
+      Rarity: common
+      Broadcast: true
+      Placeholder_Apply: false
+      Win_Limit:
+        Player:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+        Global:
+          Enabled: false
+          Amount: -1
+          Cooldown: 0
+          CooldownStep: 1
+      Preview: '2g0004000j9cg01mrb9dpim6sj1cpq3kpboe1in4qb5dphmanr2dtq78r3518006t31cs5001r4d5pn0r31f440012ec5mma02hfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24d9g60g4am2g48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Commands: []
+      Items:
+      - '2g0004000j9cg01mrb9dpim6sj1cpq3kpboe1in4qb5dphmanr2dtq78r3518006t31cs5001r4d5pn0r31f440012ec5mma02hfch78pboegh3k81248m208j5f1q74o9278g5mup2ehingt1278g24d9g60g4am2g48m208j3dtm6ush278g248pj6kq46dq348m208j9ehgmoqb348t20pj1dhpmavatfk00600991km8pa6dhgmeso0000022801h2msor8c5n78rb5dpq762g00000220009km800kdlkmspb3e9gmct1qeln64sj5c5lmirj708006r3mdg0020000400agrfeln78080'
+      Ignored_For_Permissions: []
+Milestones:
+  Repeatable: false
