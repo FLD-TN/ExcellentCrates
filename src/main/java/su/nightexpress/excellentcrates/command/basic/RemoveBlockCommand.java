@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 import su.nightexpress.excellentcrates.CratesPlugin;
 import su.nightexpress.excellentcrates.Placeholders;
 import su.nightexpress.excellentcrates.config.Lang;
@@ -35,18 +37,17 @@ public class RemoveBlockCommand extends AbstractCommand<CratesPlugin> {
         }
 
         Location location = target.location();
-        Crate crate = plugin.getCrateManager().getCrateByLocation(location);
-        if (crate == null || !crate.removeBlockPosition(location)) {
+        List<Crate> unlinked = plugin.getCrateManager().unlinkPosition(location);
+        if (unlinked.isEmpty()) {
             Lang.COMMAND_REMOVEBLOCK_ERROR_NOT_LINKED.getMessage().send(sender);
             return;
         }
 
-        crate.resetHologram();
-        crate.saveSettings();
-
-        Lang.COMMAND_REMOVEBLOCK_DONE.getMessage()
-            .replace(crate.replacePlaceholders())
-            .replace(Placeholders.forLocation(location))
-            .send(sender);
+        for (Crate crate : unlinked) {
+            Lang.COMMAND_REMOVEBLOCK_DONE.getMessage()
+                .replace(crate.replacePlaceholders())
+                .replace(Placeholders.forLocation(location))
+                .send(sender);
+        }
     }
 }

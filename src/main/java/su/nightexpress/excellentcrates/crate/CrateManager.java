@@ -164,6 +164,17 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             this.loadCrate(crate);
         }
         this.plugin.info("Loaded " + this.crateMap.size() + " crates.");
+
+        // Warn about positions listed by two crates: only one of them can be used there.
+        Map<WorldPos, Crate> owners = new HashMap<>();
+        for (Crate crate : this.crateMap.values()) {
+            for (WorldPos pos : crate.getBlockPositions()) {
+                Crate first = owners.putIfAbsent(pos, crate);
+                if (first != null) {
+                    this.plugin.warn("Position " + pos.serialize() + " is linked to both '" + first.getId() + "' and '" + crate.getId() + "'. Use /crate removeblock there and link it again.");
+                }
+            }
+        }
     }
 
     private void loadCrate(@NotNull Crate crate) {
@@ -342,17 +353,52 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     public Crate getCrateByLocation(@NotNull Location location) {
         WorldPos pos = WorldPos.from(location);
 
-        return this.crateByPosMap.get(pos);
+        Crate crate = this.crateByPosMap.get(pos);
+        // Never trust a stale lookup entry: the crate must still own this position.
+        if (crate != null && !crate.getBlockPositions().contains(pos)) {
+            this.crateByPosMap.remove(pos);
+            return null;
+        }
+        return crate;
     }
 
     // Port of 6.0.0: positions are mapped to crates, so a block click is one map lookup instead of a scan of all crates.
+    // The whole map is rebuilt from the crates' own position lists, so no old entry can survive an unlink.
     public void updateCratePositions(@NotNull Crate crate) {
-        this.removeCratePositions(crate);
-        crate.getBlockPositions().forEach(pos -> this.crateByPosMap.put(pos, crate));
+        this.rebuildPositions(crate);
     }
 
     public void removeCratePositions(@NotNull Crate crate) {
         this.crateByPosMap.values().removeIf(has -> has == crate);
+    }
+
+    private void rebuildPositions(@Nullable Crate changed) {
+        this.crateByPosMap.clear();
+        for (Crate other : this.crateMap.values()) {
+            if (changed != null && (other == changed || other.getId().equalsIgnoreCase(changed.getId()))) continue;
+            other.getBlockPositions().forEach(pos -> this.crateByPosMap.putIfAbsent(pos, other));
+        }
+        if (changed != null) {
+            changed.getBlockPositions().forEach(pos -> this.crateByPosMap.putIfAbsent(pos, changed));
+        }
+    }
+
+    /**
+     * Unlinks a position from every crate that lists it (a position shared by two crates in their files
+     * would otherwise leave a hidden crate behind). Returns the unlinked crates.
+     */
+    @NotNull
+    public List<Crate> unlinkPosition(@NotNull Location location) {
+        List<Crate> unlinked = new ArrayList<>();
+        for (Crate crate : new ArrayList<>(this.crateMap.values())) {
+            if (crate.removeBlockPosition(location)) {
+                crate.resetHologram();
+                crate.saveSettings();
+                unlinked.add(crate);
+            }
+        }
+        this.rebuildPositions(null);
+        return unlinked;
     }
 
     public void updateCrateHolograms() {
