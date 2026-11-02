@@ -42,6 +42,7 @@ public class KeyManager extends AbstractManager<CratesPlugin> {
 
     private void loadKeys() {
         for (File file : FileUtil.getFiles(plugin.getDataFolder() + Config.DIR_KEYS, true)) {
+            if (!file.getName().endsWith(".yml")) continue; // skip backups like *.yml.pre-repair
             this.loadKey(new CrateKey(this.plugin, file));
         }
         this.plugin.info("Loaded " + this.keysMap.size() + " crate keys.");

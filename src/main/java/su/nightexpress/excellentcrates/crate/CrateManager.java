@@ -159,6 +159,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
 
     private void loadCrates() {
         for (File file : FileUtil.getFiles(plugin.getDataFolder() + Config.DIR_CRATES, false)) {
+            if (!file.getName().endsWith(".yml")) continue; // skip backups like *.yml.pre-repair
             Crate crate = new Crate(plugin, file);
             this.loadCrate(crate);
         }

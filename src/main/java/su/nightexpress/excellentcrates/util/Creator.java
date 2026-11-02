@@ -46,26 +46,57 @@ public class Creator {
 
     /**
      * BoxPvP default pack (8 crates + keys + previews, converted from the purchased 4.x config).
-     * Installed only while the server has no crate file yet; existing files are never overwritten,
-     * so deleting/editing crates later is safe.
+     * Installed once (flag 'Default_Pack.Installed' in config.yml): missing files are copied, and crate files
+     * that are only an empty shell (no 'Name', e.g. a lone 'Key.Required' line) are replaced.
+     * Real crate files are never overwritten, and deleted crates are not re-created after the first install.
      */
     private void installDefaultPack() {
-        File dirCrates = new File(plugin.getDataFolder().getAbsolutePath(), Config.DIR_CRATES);
-        File[] existing = dirCrates.listFiles((dir, name) -> name.endsWith(".yml"));
-        if (existing != null && existing.length > 0) return;
+        FileConfig config = this.plugin.getConfig();
+        if (config.getBoolean(PACK_FLAG)) return;
 
         int installed = 0;
         for (String id : DEFAULT_PACK) {
-            installed += this.copyIfMissing("crates/" + id + ".yml");
+            installed += this.installCrate("crates/" + id + ".yml");
             installed += this.copyIfMissing("keys/" + id + ".yml");
             installed += this.copyIfMissing("previews/" + id + "_preview.yml");
         }
-        if (installed > 0) {
-            this.plugin.info("Installed default crate pack (" + installed + " files).");
-        }
+        config.set(PACK_FLAG, true);
+        config.saveChanges();
+        this.plugin.info("Installed default crate pack (" + installed + " files).");
     }
 
+    private static final String   PACK_FLAG    = "Default_Pack.Installed";
     private static final String[] DEFAULT_PACK = {"common", "uncommon", "rare", "epic", "legendary", "mythic", "glory", "vote"};
+
+    private int installCrate(@NotNull String path) {
+        File file = new File(plugin.getDataFolder(), path);
+        List<String> positions = new ArrayList<>();
+        if (file.exists()) {
+            FileConfig old = new FileConfig(file);
+            if (!isEmptyShell(old)) return 0;
+
+            positions.addAll(old.getStringList("Block.Positions"));
+            File backup = new File(file.getParentFile(), file.getName().replace(".yml", ".empty-backup"));
+            if (!file.renameTo(backup)) return 0;
+            this.plugin.warn("Replaced empty crate file '" + file.getName() + "' with the default one (old file: " + backup.getName() + ").");
+        }
+
+        int copied = this.copyIfMissing(path);
+        if (copied > 0 && !positions.isEmpty()) {
+            FileConfig fresh = new FileConfig(file);
+            fresh.set("Block.Positions", positions);
+            fresh.saveChanges();
+        }
+        return copied;
+    }
+
+    /** Crate file without anything useful: no rewards, no preview and no item (e.g. only 'Key.Required'). */
+    private static boolean isEmptyShell(@NotNull FileConfig config) {
+        if (!config.getSection("Rewards.List").isEmpty()) return false;
+        if (config.contains("Preview_Config")) return false;
+        String material = config.getString("Item.Material", "AIR");
+        return material == null || material.equalsIgnoreCase("AIR");
+    }
 
     private int copyIfMissing(@NotNull String path) {
         File file = new File(plugin.getDataFolder(), path);

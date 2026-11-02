@@ -3,6 +3,7 @@ package su.nightexpress.excellentcrates.crate.impl;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -150,6 +151,8 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         // Custom items (ItemsAdder) are saved by ID in 'ItemProvider', 'Item' keeps the NBT copy as fallback.
         this.customItemsById = config.getBoolean("Custom_Items_By_Id", true);
         this.item = new ItemStack(config.getItem("Item"));
+        // Crates without an item (empty/broken files) would be invisible in the editor list.
+        if (this.item.getType().isAir()) this.item = new ItemStack(Material.CHEST);
         this.itemRef = CustomItemRef.read(config, "ItemProvider");
 
         this.blockPositions.addAll(config.getStringList("Block.Positions").stream().map(WorldPos::deserialize).toList());
