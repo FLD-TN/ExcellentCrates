@@ -43,6 +43,37 @@ public class Creator {
 
         this.installDefaultPack();
         this.removePreviewRarityRows();
+        this.removeEmptyCrates();
+    }
+
+    /**
+     * One-time cleanup: leftover empty crate files (only 'Key.Required', no name/item/rewards) such as
+     * basic/bet/deport/kits/koth, plus old '*.pre-repair' / '*.empty-backup' copies, are moved out of /crates/
+     * into /backups/empty-crates/ so they no longer show up in the editor.
+     */
+    private void removeEmptyCrates() {
+        FileConfig config = this.plugin.getConfig();
+        String flag = "Default_Pack.Removed_Empty_Crates";
+        if (config.getBoolean(flag)) return;
+
+        File dirCrates = new File(plugin.getDataFolder() + Config.DIR_CRATES);
+        File backupDir = new File(plugin.getDataFolder(), "backups/empty-crates");
+        File[] files = dirCrates.listFiles(File::isFile);
+        if (files != null) {
+            for (File file : files) {
+                String name = file.getName();
+                boolean leftover = name.endsWith(".pre-repair") || name.endsWith(".empty-backup");
+                boolean emptyShell = name.endsWith(".yml") && !new FileConfig(file).contains("Name") && isEmptyShell(new FileConfig(file));
+                if (!leftover && !emptyShell) continue;
+
+                if (!backupDir.exists() && !backupDir.mkdirs()) continue;
+                if (file.renameTo(new File(backupDir, name))) {
+                    this.plugin.warn("Removed empty crate file '" + name + "' (moved to backups/empty-crates).");
+                }
+            }
+        }
+        config.set(flag, true);
+        config.saveChanges();
     }
 
     /**
