@@ -42,6 +42,44 @@ public class Creator {
         }
 
         this.installDefaultPack();
+        this.removePreviewRarityRows();
+    }
+
+    /**
+     * One-time migration: the pack previews no longer show the 'rarity_*' row heads and the empty-row panes.
+     * Removes only those entries from the pack preview files and turns their slots into border panes.
+     */
+    private void removePreviewRarityRows() {
+        FileConfig config = this.plugin.getConfig();
+        String flag = "Default_Pack.Previews_No_Rarity";
+        if (config.getBoolean(flag)) return;
+
+        for (String id : DEFAULT_PACK) {
+            File file = new File(plugin.getDataFolder() + Config.DIR_PREVIEWS, id + "_preview.yml");
+            if (!file.exists()) continue;
+
+            FileConfig preview = new FileConfig(file);
+            boolean changed = false;
+            for (String key : preview.getSection("Content")) {
+                if (!key.toLowerCase().startsWith("rarity_")) continue;
+                preview.remove("Content." + key);
+                changed = true;
+            }
+            if (!changed) continue;
+
+            String layerPath = preview.getSection("Content").stream()
+                .filter(key -> key.equalsIgnoreCase("layer_one")).findFirst().map(key -> "Content." + key + ".Slots").orElse(null);
+            if (layerPath != null) {
+                java.util.TreeSet<Integer> slots = new java.util.TreeSet<>();
+                for (int slot : preview.getIntArray(layerPath)) slots.add(slot);
+                slots.addAll(List.of(10, 19, 28, 37));
+                preview.set(layerPath, String.join(",", slots.stream().map(String::valueOf).toList()));
+            }
+            preview.saveChanges();
+            this.plugin.info("Removed rarity rows from preview '" + file.getName() + "'.");
+        }
+        config.set(flag, true);
+        config.saveChanges();
     }
 
     /**
