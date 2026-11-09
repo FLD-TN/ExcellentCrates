@@ -98,6 +98,15 @@ public abstract class AbstractHologramHandler<T> implements HologramHandler {
 
         List<Player> online = new ArrayList<>(plugin.getServer().getOnlinePlayers());
 
+        // Async refresh vs main-thread remove(): without the lock a refresh still walking the old list
+        // could spawn entities after their destroy packet, leaving a ghost hologram with stale text.
+        synchronized (entityList) {
+            if (this.entityMap.get(crate.getId()) != entityList) return;
+            this.refreshEntities(crate, entityList, yOffset, online);
+        }
+    }
+
+    private void refreshEntities(@NotNull Crate crate, @NotNull EntityList entityList, double yOffset, @NotNull List<Player> online) {
         for (HologramEntity entity : entityList.getHolograms()) {
             WorldPos position = entity.position;
 
@@ -186,7 +195,10 @@ public abstract class AbstractHologramHandler<T> implements HologramHandler {
         EntityList list = this.entityMap.remove(crate.getId());
         if (list == null) return;
 
-        this.broadcastPacket(this.createDestroyPacket(list.getIDs()));
+        synchronized (list) {
+            this.broadcastPacket(this.createDestroyPacket(list.getIDs()));
+            list.getHolograms().forEach(entity -> entity.players.clear());
+        }
     }
 
     @Override

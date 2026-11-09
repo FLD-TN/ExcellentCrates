@@ -47,7 +47,7 @@ public class CratePlacementEditor extends EditorMenu<CratesPlugin, Crate> implem
             else if (event.isRightClick()) {
                 this.handleInput(viewer, Lang.EDITOR_ENTER_HOLOGRAM_TEMPLATE, (dialog, input) -> {
                     crate.setHologramTemplate(input.getTextRaw());
-                    crate.updateHologram();
+                    crate.resetHologram(); // template lines are baked in when the hologram is built
                     this.saveSettings(viewer, crate, false);
                     return true;
                 }).setSuggestions(Config.CRATE_HOLOGRAM_TEMPLATES.get().keySet(), true);

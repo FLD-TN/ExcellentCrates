@@ -43,6 +43,7 @@ public class CrateMainEditor extends EditorMenu<CratesPlugin, Crate> implements 
         this.addItem(Material.NAME_TAG, EditorLang.CRATE_DISPLAY_NAME, 2, (viewer, event, crate) -> {
             this.handleInput(viewer, Lang.EDITOR_ENTER_DISPLAY_NAME, (dialog, input) -> {
                 crate.setName(input.getText());
+                crate.resetHologram(); // show the new name now instead of on the next update tick
                 this.saveSettings(viewer, crate, false);
                 return true;
             });
