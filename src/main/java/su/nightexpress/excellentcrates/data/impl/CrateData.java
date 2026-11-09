@@ -15,6 +15,8 @@ public class CrateData {
     private long openCooldown;
     private int openings;
     private int milestone;
+    private int     pityCount;
+    private boolean pityDone;
 
     public CrateData() {
         this(0, 0, 0, new HashMap<>());
@@ -99,6 +101,22 @@ public class CrateData {
 
     public void setMilestone(int milestone) {
         this.milestone = Math.max(0, milestone);
+    }
+
+    public int getPityCount() {
+        return this.pityCount;
+    }
+
+    public void setPityCount(int pityCount) {
+        this.pityCount = Math.max(0, pityCount);
+    }
+
+    public boolean isPityDone() {
+        return this.pityDone;
+    }
+
+    public void setPityDone(boolean pityDone) {
+        this.pityDone = pityDone;
     }
 
     @NotNull

@@ -67,11 +67,12 @@ public class BasicOpening extends AbstractOpening {
         this.setRefundable(false);
         this.setHasRewardAttempts(true);
 
-        Reward reward = this.getCrate().rollReward(this.player);
-        reward.give(this.player);
-
-        CrateObtainRewardEvent rewardEvent = new CrateObtainRewardEvent(reward, player);
-        plugin.getPluginManager().callEvent(rewardEvent);
+        // Through giveReward so pity (BoxPvP) also applies to instant openings.
+        Reward reward = this.giveReward(this.getCrate().rollReward(this.player));
+        if (reward == null) {
+            this.rolled = true;
+            return;
+        }
 
         Block block = this.getSource().getBlock();
         if (this.visuals && Config.CRATE_DISPLAY_REWARD_ABOVE_BLOCK.get() && block != null) {

@@ -73,6 +73,17 @@ public class PlaceholderHook {
                     ;
             });
 
+            // BoxPvP pity: 'pity_left' before 'pity' (prefix match in insertion order). Empty when done/off.
+            this.placeholders.put("pity_left", (player, crate) -> {
+                int left = this.pityLeft(player, crate);
+                return left <= 0 ? "" : NumberUtil.format(left);
+            });
+
+            this.placeholders.put("pity", (player, crate) -> {
+                int left = this.pityLeft(player, crate);
+                return left <= 0 ? "" : "Còn " + NumberUtil.format(left) + " lượt";
+            });
+
             this.placeholders.put("next_milestone_openings", (player, crate) -> {
                 CrateUser user = plugin.getUserManager().getUserData(player);
                 int milestones = user.getCrateData(crate).getMilestone();
@@ -88,6 +99,13 @@ public class PlaceholderHook {
 
                 return reward == null ? "-" : reward.getName();
             });
+        }
+
+        private int pityLeft(@NotNull Player player, @NotNull Crate crate) {
+            if (!crate.hasPity()) return 0;
+            CrateData data = plugin.getUserManager().getUserData(player).getCrateData(crate);
+            if (data.isPityDone()) return 0;
+            return Math.max(1, crate.getPityOpenings() - data.getPityCount());
         }
 
         @Override

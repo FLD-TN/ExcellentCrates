@@ -29,6 +29,7 @@ public final class Ui {
     public static final String C_ITEM    = "#E0C3FC";
     public static final String C_SELECT  = "#80E0B0";
     public static final String C_AMOUNT  = "#FFC4A3";
+    public static final String C_PITY    = "#FFADAD";
 
     private Ui() {}
 

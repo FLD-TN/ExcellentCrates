@@ -39,6 +39,7 @@ public class Perms {
     public static final UniPermission COMMAND_PREVIEW            = new UniPermission(PREFIX_COMMAND + "preview", "Access to the '/crate preview' sub-command.");
     public static final UniPermission COMMAND_PREVIEW_OTHERS     = new UniPermission(PREFIX_COMMAND + "preview.others", "Access to the '/crate preview' sub-command on other players.");
     public static final UniPermission COMMAND_RESETCOOLDOWN      = new UniPermission(PREFIX_COMMAND + "resetcooldown", "Access to the '/crate resetcooldown' sub-command.");
+    public static final UniPermission COMMAND_RESETPITY          = new UniPermission(PREFIX_COMMAND + "resetpity", "Access to the '/crate resetpity' sub-command.");
     public static final UniPermission COMMAND_RESETLIMIT         = new UniPermission(PREFIX_COMMAND + "resetlimit", "Access to the '/crate resetlimit' sub-command.");
     public static final UniPermission COMMAND_SETBLOCK           = new UniPermission(PREFIX_COMMAND + "setblock", "Access to the '/crate setblock' sub-command.");
 
@@ -65,6 +66,7 @@ public class Perms {
             COMMAND_MENU, COMMAND_MENU_OTHERS,
             COMMAND_PREVIEW, COMMAND_PREVIEW_OTHERS,
             COMMAND_RESETCOOLDOWN,
+            COMMAND_RESETPITY,
             COMMAND_RESETLIMIT,
             COMMAND_SETBLOCK
         );
