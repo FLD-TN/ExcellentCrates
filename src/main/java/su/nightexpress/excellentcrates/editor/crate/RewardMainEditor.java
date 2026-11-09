@@ -99,23 +99,11 @@ public class RewardMainEditor extends EditorMenu<CratesPlugin, Reward> implement
         });
 
         this.addItem(ItemUtil.getSkinHead(TEXTURE_WEIGHT), EditorLang.REWARD_WEIGHT, 21, (viewer, event, reward) -> {
-            if (event.isLeftClick()) {
-                this.handleInput(viewer, Lang.EDITOR_ENTER_RARITY, (dialog, wrapper) -> {
-                    Rarity rarity = this.plugin.getCrateManager().getRarity(wrapper.getTextRaw());
-                    if (rarity == null) return true;
-
-                    reward.setRarity(rarity);
-                    this.saveReward(viewer, reward, false);
-                    return true;
-                }).setSuggestions(plugin.getCrateManager().getRarityMap().keySet(), true);
-            }
-            if (event.isRightClick()) {
-                this.handleInput(viewer, Lang.EDITOR_ENTER_WEIGHT, (dialog, input) -> {
-                    reward.setWeight(input.asDouble());
-                    this.saveReward(viewer, reward, false);
-                    return true;
-                });
-            }
+            this.handleInput(viewer, Lang.EDITOR_ENTER_WEIGHT, (dialog, input) -> {
+                reward.setWeight(input.asDouble());
+                this.saveReward(viewer, reward, false);
+                return true;
+            });
         });
 
         this.addItem(Material.LIME_DYE, EditorLang.REWARD_PLAYER_LIMIT, 25, (viewer, event, reward) -> {

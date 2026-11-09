@@ -440,21 +440,9 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
 
     @NotNull
     public Reward rollReward(@Nullable Player player, @Nullable Rarity rarity) {
-        List<Reward> rewards = this.getRewards(player, rarity);
-
-        // If no rarity is specified, we have to select a random one and filter rewards by selected rarity.
-        // Otherwise reward list is already obtained with specified rarity.
-        if (rarity == null) {
-            Map<Rarity, Double> rarities = new HashMap<>();
-            rewards.stream().map(Reward::getRarity).forEach(rewardRarity -> {
-                rarities.putIfAbsent(rewardRarity, rewardRarity.getWeight());
-            });
-
-            Rarity rarityRoll = Rnd.getByWeight(rarities);
-            rewards.removeIf(reward -> reward.getRarity() != rarityRoll);
-        }
-
-        return this.rollReward(rewards);
+        // BoxPvP: rewards are rolled by their own weight only (chance = weight / total weight).
+        // Upstream rolls a rarity first (by rarity weight), then a reward inside it.
+        return this.rollReward(this.getRewards(player, rarity));
     }
 
     @NotNull

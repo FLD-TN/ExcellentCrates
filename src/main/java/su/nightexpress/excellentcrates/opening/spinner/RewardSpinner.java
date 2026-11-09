@@ -18,6 +18,7 @@ import su.nightexpress.nightcore.util.random.Rnd;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,16 +65,16 @@ public class RewardSpinner extends InventorySpinner {
         Crate crate = this.opening.getCrate();
         Player player = this.opening.getPlayer();
 
-        Map<Rarity, Double> rarityWeights = new HashMap<>(this.rarityWeightMap);
-        rarityWeights.keySet().removeIf(rarity -> !crate.hasRewards(player, rarity));
-
-        Rarity rarity = rarityWeights.isEmpty() ? null : Rnd.getByWeight(rarityWeights);
-
-        if (rarity == null || !crate.hasRewards(this.opening.getPlayer(), rarity)) {
+        // BoxPvP: roll by reward weight; the spin's rarities only filter which rewards can show up.
+        List<Reward> rewards = crate.getRewards(player);
+        rewards.removeIf(reward -> !this.rarityWeightMap.containsKey(reward.getRarity()));
+        if (rewards.isEmpty()) {
             return new ItemStack(Material.AIR);
         }
 
-        Reward reward = this.opening.getCrate().rollReward(this.opening.getPlayer(), rarity);
+        Map<Reward, Double> weights = new HashMap<>();
+        rewards.forEach(reward -> weights.put(reward, reward.getWeight()));
+        Reward reward = Rnd.getByWeight(weights);
 
         ItemStack item = reward.getPreview();
         PDCUtil.set(item, Keys.rewardId, reward.getId());

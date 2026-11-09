@@ -271,7 +271,6 @@ public class EditorLang {
         section("Thông tin"),
         row("Trọng số", Placeholders.REWARD_WEIGHT),
         row("Tỉ lệ ra", REWARD_ROLL_CHANCE + "%"),
-        row("Độ hiếm", REWARD_RARITY_NAME),
         "",
         action("Chuột trái để chỉnh sửa"),
         actionAlt("Shift + Chuột trái để dời lên"),
@@ -350,17 +349,15 @@ public class EditorLang {
     );
 
     public static final LangItem REWARD_WEIGHT = LangItem.of(PREFIX + "Reward.Weight",
-        name(C_REWARD, "Độ hiếm & Trọng số"),
+        name(C_REWARD, "Trọng số"),
         desc("Trọng số càng cao thì"),
         desc("tỉ lệ ra càng lớn."),
         "",
         section("Thông tin"),
-        row("Độ hiếm", REWARD_RARITY_NAME),
         row("Trọng số", Placeholders.REWARD_WEIGHT),
         row("Tỉ lệ ra", REWARD_ROLL_CHANCE + "%"),
         "",
-        action("Chuột trái để đổi độ hiếm"),
-        action("Chuột phải để đổi trọng số")
+        action("Chuột trái để đổi trọng số")
     );
 
     public static final LangItem REWARD_COMMANDS = LangItem.of(PREFIX + "Reward.Commands",

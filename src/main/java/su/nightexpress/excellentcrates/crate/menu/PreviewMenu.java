@@ -208,7 +208,6 @@ public class PreviewMenu extends ConfigMenu<CratesPlugin> implements AutoFilled<
             "",
             Ui.section("Thông tin"),
             Ui.row("Tỉ lệ ra", REWARD_ROLL_CHANCE + "%"),
-            Ui.row("Độ hiếm", REWARD_RARITY_NAME + Ui.color(Ui.DARK, " (" + REWARD_RARITY_ROLL_CHANCE + "%)")),
             "",
             WIN_LIMIT_AMOUNT,
             WIN_LIMIT_COOLDOWN,

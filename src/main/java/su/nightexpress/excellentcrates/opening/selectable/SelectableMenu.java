@@ -246,8 +246,6 @@ public class SelectableMenu extends ConfigMenu<CratesPlugin> implements AutoFill
         this.rewardLore = ConfigValue.create("Reward.Lore", Lists.newList(
             REWARD_PREVIEW_LORE,
             "",
-            Ui.row("Độ hiếm", REWARD_RARITY_NAME),
-            "",
             Ui.action("Chuột trái để chọn")
         )).read(cfg);
 

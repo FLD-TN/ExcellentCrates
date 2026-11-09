@@ -401,13 +401,11 @@ public class Reward implements Weighted, Placeholder {
 
     @Override
     public double getRollChance() {
-        Rarity rarity = this.getRarity();
+        // BoxPvP: weight only (see Crate#rollReward).
+        if (!this.isRollable()) return 0D;
 
-        double sum = this.crate.getRewards(rarity).stream().mapToDouble(Reward::getWeight).sum();
-        double rarityChance = rarity.getRollChance(this.crate);
-        double chance = (this.getWeight() / sum) * (rarityChance / 100D);
-
-        return chance * 100D;
+        double sum = this.crate.getRewards().stream().filter(Reward::isRollable).mapToDouble(Reward::getWeight).sum();
+        return sum <= 0D ? 0D : (this.getWeight() / sum) * 100D;
     }
 
     @NotNull

@@ -114,9 +114,6 @@ public abstract class AbstractOpening extends Runnable implements Opening {
 
     @Nullable
     private Reward rollReplacement(@NotNull Reward reward) {
-        if (this.crate.hasRewards(this.player, reward.getRarity())) {
-            return this.crate.rollReward(this.player, reward.getRarity());
-        }
         if (this.crate.hasRewards(this.player)) {
             return this.crate.rollReward(this.player);
         }
