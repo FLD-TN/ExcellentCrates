@@ -20,7 +20,7 @@ Block:
     Enabled: true
     Y_Offset: 0.0
     Text:
-    - '<#F7DF54>Crate Vote</#F7DF54>'
+    - '%crate_name%'
     - '<#BFC7D5>Nhận key khi vote cho server</#BFC7D5>'
     - '<#BFC7D5>Bạn có </#BFC7D5><#FFD166>%excellentcrates_keys_vote%</#FFD166><#BFC7D5> key</#BFC7D5>'
     - '<#555555>[</#555555><#7FDBFF>Chuột trái để xem quà</#7FDBFF><#555555>]</#555555>'

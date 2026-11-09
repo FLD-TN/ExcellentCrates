@@ -44,6 +44,51 @@ public class Creator {
         this.installDefaultPack();
         this.removePreviewRarityRows();
         this.removeEmptyCrates();
+        this.useCrateNameInPackHolograms();
+    }
+
+    /** Crate name lines the 4.x pack wrote into its hologram templates (migrated by Crate#onLoad to config.yml). */
+    private static final java.util.Map<String, String> PACK_HOLO_NAMES = java.util.Map.of(
+        "common", "<#F2F2F2>Crate Thường</#F2F2F2>",
+        "uncommon", "<#7CFC9A>Crate Hiếm</#7CFC9A>",
+        "rare", "<#6F9CFF>Crate Quý</#6F9CFF>",
+        "epic", "<#EE82EE>Crate Sử Thi</#EE82EE>",
+        "legendary", "<#FFBB00>Crate Huyền Thoại</#FFBB00>",
+        "mythic", "<#B07CFF>Crate Thần Thoại</#B07CFF>",
+        "glory", "<#F04337>Crate Vinh Quang</#F04337>",
+        "vote", "<#F7DF54>Crate Vote</#F7DF54>"
+    );
+
+    /**
+     * One-time migration: the pack hologram templates had the crate name written in, so renaming a crate
+     * in the editor never changed its hologram. Only the exact original pack name line is swapped for
+     * %crate_name%; lines edited by hand are left alone.
+     */
+    private void useCrateNameInPackHolograms() {
+        FileConfig config = this.plugin.getConfig();
+        String flag = "Default_Pack.Holo_Crate_Name";
+        if (config.getBoolean(flag)) return;
+
+        java.util.Map<String, List<String>> templates = new java.util.HashMap<>(Config.CRATE_HOLOGRAM_TEMPLATES.get());
+        boolean changed = false;
+        for (var entry : PACK_HOLO_NAMES.entrySet()) {
+            List<String> lines = templates.get(entry.getKey());
+            if (lines == null) continue;
+
+            List<String> fixed = new ArrayList<>(lines);
+            fixed.replaceAll(line -> line.equals(entry.getValue()) ? CRATE_NAME : line);
+            if (fixed.equals(lines)) continue;
+
+            templates.put(entry.getKey(), fixed);
+            changed = true;
+            this.plugin.info("Hologram template '" + entry.getKey() + "' now shows the crate name (" + CRATE_NAME + ").");
+        }
+        if (changed) {
+            Config.CRATE_HOLOGRAM_TEMPLATES.set(templates);
+            Config.CRATE_HOLOGRAM_TEMPLATES.write(config);
+        }
+        config.set(flag, true);
+        config.saveChanges();
     }
 
     /**
