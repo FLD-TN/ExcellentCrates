@@ -582,9 +582,11 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
                 Map<String, Integer> rewards = this.batchRewards.remove(player.getUniqueId());
                 if (opened > 0 && rewards != null && !rewards.isEmpty()) {
                     List<String> entries = new ArrayList<>();
-                    rewards.forEach((name, count) -> entries.add(Lang.CRATE_OPEN_BATCH_ENTRY.getString()
+                    // Reward names often carry legacy colours (&8...) with no closing tag; the summary is one
+                    // multi-line text, so without <reset> that colour bled into every later entry.
+                    rewards.forEach((name, count) -> entries.add("<reset>" + Lang.CRATE_OPEN_BATCH_ENTRY.getString()
                         .replace(Placeholders.GENERIC_AMOUNT, NumberUtil.format(count))
-                        .replace(Placeholders.REWARD_NAME, name)));
+                        .replace(Placeholders.REWARD_NAME, name) + "<reset>"));
 
                     Lang.CRATE_OPEN_BATCH_SUMMARY.getMessage()
                         .replace(crate.replacePlaceholders())
