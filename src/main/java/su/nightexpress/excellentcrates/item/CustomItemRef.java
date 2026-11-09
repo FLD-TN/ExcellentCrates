@@ -1,10 +1,16 @@
 package su.nightexpress.excellentcrates.item;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderHook;
 import su.nightexpress.nightcore.config.FileConfig;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Port of ExcellentCrates 6.2.0 CustomItemProvider: a custom plugin item saved by its ID,
@@ -30,7 +36,37 @@ public class CustomItemRef {
         String itemId = ItemsAdderHook.getItemId(itemStack);
         if (itemId == null) return null;
 
+        // BoxPvP: only a plain ItemsAdder item is saved by ID. An IA item changed by another plugin
+        // (BoxPet egg: own name, lore and data on an IA texture) or renamed by hand keeps its NBT,
+        // otherwise it comes back as the bare IA item ("icon_knight_castle") without its data.
+        ItemStack fresh = ItemsAdderHook.createItem(itemId, 1);
+        if (fresh == null || !isPlain(itemStack, fresh)) return null;
+
         return new CustomItemRef(ItemsAdderHook.HANDLER, itemId, itemStack.getAmount());
+    }
+
+    /** Same name, lore and plugin data as the item ItemsAdder creates for this ID. */
+    private static boolean isPlain(@NotNull ItemStack item, @NotNull ItemStack fresh) {
+        if (hasForeignData(item, fresh)) return false;
+
+        ItemMeta meta = item.getItemMeta();
+        ItemMeta freshMeta = fresh.getItemMeta();
+        if (meta == null || freshMeta == null) return meta == freshMeta;
+
+        String name = meta.hasDisplayName() ? meta.getDisplayName() : null;
+        String freshName = freshMeta.hasDisplayName() ? freshMeta.getDisplayName() : null;
+        return Objects.equals(name, freshName) && Objects.equals(meta.getLore(), freshMeta.getLore());
+    }
+
+    /** True if the item carries plugin data (PDC keys) the plain ItemsAdder item doesn't have. */
+    private static boolean hasForeignData(@NotNull ItemStack item, @NotNull ItemStack fresh) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+
+        Set<NamespacedKey> keys = new HashSet<>(meta.getPersistentDataContainer().getKeys());
+        ItemMeta freshMeta = fresh.getItemMeta();
+        if (freshMeta != null) keys.removeAll(freshMeta.getPersistentDataContainer().getKeys());
+        return !keys.isEmpty();
     }
 
     @Nullable
@@ -75,7 +111,8 @@ public class CustomItemRef {
     public static ItemStack resolve(@Nullable CustomItemRef ref, @NotNull ItemStack fallback) {
         if (ref != null) {
             ItemStack itemStack = ref.createItemStack();
-            if (itemStack != null) return itemStack;
+            // Items saved by ID before the plain-item check: keep the saved NBT if it has plugin data.
+            if (itemStack != null && !hasForeignData(fallback, itemStack)) return itemStack;
         }
         return new ItemStack(fallback);
     }
