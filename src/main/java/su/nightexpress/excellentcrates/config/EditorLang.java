@@ -264,28 +264,6 @@ public class EditorLang {
         actionAlt("Chuột phải để bật / tắt lặp lại")
     );
 
-    public static final LangItem CRATE_PITY = LangItem.of(PREFIX + "Crate.Pity",
-        name(C_PITY, "Bảo hiểm"),
-        desc("Mỗi người chơi được 1 lần:"),
-        desc("chưa ra món nào trong nhóm"),
-        desc("thì lượt thứ N chắc chắn ra."),
-        "",
-        section("Thông tin"),
-        row("Trạng thái", CRATE_PITY_ENABLED),
-        row("Lượt thứ", CRATE_PITY_OPENINGS),
-        section("Nhóm phần thưởng"),
-        CRATE_PITY_REWARDS,
-        "",
-        section("Lưu ý"),
-        note("Ra 1 món trong nhóm là"),
-        note("bộ đếm kết thúc luôn."),
-        "",
-        action("Chuột trái để bật / tắt"),
-        actionAlt("Chuột phải để đổi số lượt"),
-        actionAlt("Shift + Chuột trái để thêm món"),
-        actionBad("Q để xóa nhóm phần thưởng")
-    );
-
     public static final LangItem REWARD_OBJECT = LangItem.of(PREFIX + "Reward.Object",
         REWARD_NAME + " " + color(DARK, "[") + color(VALUE, REWARD_ID) + color(DARK, "]"),
         REWARD_INSPECT_CONTENT,

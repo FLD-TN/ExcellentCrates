@@ -60,9 +60,6 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
     private CustomItemRef itemRef;
     private boolean       customItemsById = true;
     private boolean     milestonesRepeatable;
-    private boolean      pityEnabled;
-    private int          pityOpenings = 10;
-    private List<String> pityRewardIds = new ArrayList<>();
     private boolean     pushbackEnabled;
     private boolean     hologramEnabled;
     private String      hologramTemplate;
@@ -185,10 +182,6 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
             this.rewardMap.put(sId, reward);
         }
 
-        this.setPityEnabled(config.getBoolean("Pity.Enabled", false));
-        this.setPityOpenings(config.getInt("Pity.Openings", 10));
-        this.setPityRewardIds(config.getStringList("Pity.Rewards"));
-
         this.setMilestonesRepeatable(config.getBoolean("Milestones.Repeatable"));
         for (String sId : config.getSection("Milestones.List")) {
             this.getMilestones().add(Milestone.read(this, config, "Milestones.List." + sId));
@@ -232,10 +225,6 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         config.set("Block.Effect.Model", this.getEffectModel().name());
         config.remove("Block.Effect.Particle");
         this.getEffectParticle().write(config, "Block.Effect.Particle");
-
-        config.set("Pity.Enabled", this.pityEnabled);
-        config.set("Pity.Openings", this.pityOpenings);
-        config.set("Pity.Rewards", this.pityRewardIds);
     }
 
     private void writeLastOpenData(@NotNull FileConfig config) {
@@ -475,60 +464,6 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
             rewards.put(reward, reward.getWeight());
         });
         return Rnd.getByWeight(rewards);
-    }
-
-    /**
-     * BoxPvP pity: one guarantee per player. If none of the pity rewards dropped in the first
-     * (openings - 1) spins, spin number 'openings' gives one of them instead of the rolled reward.
-     */
-    public boolean hasPity() {
-        return this.pityEnabled && this.pityOpenings > 0 && !this.getPityRewards(null).isEmpty();
-    }
-
-    public boolean isPityReward(@NotNull Reward reward) {
-        return this.pityRewardIds.contains(reward.getId().toLowerCase());
-    }
-
-    @NotNull
-    public List<Reward> getPityRewards(@Nullable Player player) {
-        List<Reward> list = new ArrayList<>();
-        this.pityRewardIds.forEach(id -> {
-            Reward reward = this.getReward(id);
-            if (reward != null && (player == null || reward.canWin(player))) list.add(reward);
-        });
-        return list;
-    }
-
-    /** Picks a pity reward the player can still win (by reward weight), or null when all are blocked. */
-    @Nullable
-    public Reward rollPityReward(@NotNull Player player) {
-        List<Reward> rewards = this.getPityRewards(player);
-        return rewards.isEmpty() ? null : this.rollReward(rewards);
-    }
-
-    public boolean isPityEnabled() {
-        return this.pityEnabled;
-    }
-
-    public void setPityEnabled(boolean pityEnabled) {
-        this.pityEnabled = pityEnabled;
-    }
-
-    public int getPityOpenings() {
-        return this.pityOpenings;
-    }
-
-    public void setPityOpenings(int pityOpenings) {
-        this.pityOpenings = Math.max(1, pityOpenings);
-    }
-
-    @NotNull
-    public List<String> getPityRewardIds() {
-        return this.pityRewardIds;
-    }
-
-    public void setPityRewardIds(@NotNull Collection<String> ids) {
-        this.pityRewardIds = new ArrayList<>(ids.stream().map(String::toLowerCase).distinct().toList());
     }
 
     public boolean triggerMilestones(@NotNull Player player, int milestoneCount) {

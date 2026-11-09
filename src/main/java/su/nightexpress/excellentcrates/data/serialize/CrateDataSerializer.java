@@ -19,11 +19,7 @@ public class CrateDataSerializer implements JsonSerializer<CrateData>, JsonDeser
         int milestones = object.get("milestones").getAsInt();
         Map<String, LimitData> winDataMap = context.deserialize(object.get("winDataMap"), new TypeToken<Map<String, Map<String, LimitData>>>(){}.getType());
 
-        CrateData data = new CrateData(openCooldown, openings, milestones, winDataMap);
-        // BoxPvP pity fields: absent in data saved by older jars.
-        if (object.has("pityCount")) data.setPityCount(object.get("pityCount").getAsInt());
-        if (object.has("pityDone")) data.setPityDone(object.get("pityDone").getAsBoolean());
-        return data;
+        return new CrateData(openCooldown, openings, milestones, winDataMap);
     }
 
     @Override
@@ -33,8 +29,6 @@ public class CrateDataSerializer implements JsonSerializer<CrateData>, JsonDeser
         object.addProperty("openCooldown", crateData.getOpenCooldown());
         object.addProperty("openings", crateData.getOpenings());
         object.addProperty("milestones", crateData.getMilestone());
-        object.addProperty("pityCount", crateData.getPityCount());
-        object.addProperty("pityDone", crateData.isPityDone());
         object.add("winDataMap", context.serialize(crateData.getRewardDataMap()));
 
         return object;

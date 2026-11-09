@@ -79,9 +79,6 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
     public static final String CRATE_REWARDS_AMOUNT        = "%crate_rewards_amount%";
     public static final String CRATE_MILESTONES_AMOUNT     = "%crate_milestones_amount%";
     public static final String CRATE_MILESTONES_REPEATABLE = "%crate_milestones_repeatable%";
-    public static final String CRATE_PITY_ENABLED          = "%crate_pity_enabled%";
-    public static final String CRATE_PITY_OPENINGS         = "%crate_pity_openings%";
-    public static final String CRATE_PITY_REWARDS          = "%crate_pity_rewards%";
 
     public static final String CRATE_INSPECT = "%crate_inspect%";
 
@@ -273,15 +270,6 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(CRATE_REWARDS_AMOUNT, () -> NumberUtil.format(crate.getRewards().size()))
             .add(CRATE_MILESTONES_AMOUNT, () -> NumberUtil.format(crate.getMilestones().size()))
             .add(CRATE_MILESTONES_REPEATABLE, () -> CoreLang.getYesOrNo(crate.isMilestonesRepeatable()))
-            .add(CRATE_PITY_ENABLED, () -> CoreLang.getEnabledOrDisabled(crate.isPityEnabled()))
-            .add(CRATE_PITY_OPENINGS, () -> NumberUtil.format(crate.getPityOpenings()))
-            .add(CRATE_PITY_REWARDS, () -> {
-                if (crate.getPityRewardIds().isEmpty()) return problem("Chưa chọn");
-                return crate.getPityRewardIds().stream().map(id -> {
-                    Reward reward = crate.getReward(id);
-                    return reward == null ? problem(id) : good(reward.getName());
-                }).collect(Collectors.joining("\n"));
-            })
             .add(CRATE_INSPECT, () -> {
                 List<String> list = new ArrayList<>();
 

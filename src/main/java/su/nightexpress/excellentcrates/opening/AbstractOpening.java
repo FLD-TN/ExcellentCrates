@@ -36,7 +36,6 @@ public abstract class AbstractOpening extends Runnable implements Opening {
     protected boolean hasRewardAttempts;
     protected boolean costPaid;
     protected boolean refunded;
-    protected boolean pityChecked;
 
     public AbstractOpening(@NotNull CratesPlugin plugin, @NotNull Player player,
                            @NotNull CrateSource source, @Nullable CrateKey key) {
@@ -94,17 +93,14 @@ public abstract class AbstractOpening extends Runnable implements Opening {
      * start of an animation (or picked in a menu) may be out of stock by now: it's swapped for another one
      * the player can still win (same rarity first). BoxPvP fix, upstream (6.6.1, 7.x) gives it anyway.
      */
-    @Nullable
-    public Reward giveReward(@NotNull Reward reward) {
-        reward = this.applyPity(reward);
-
+    public void giveReward(@NotNull Reward reward) {
         Reward given = reward;
         if (!reward.canWin(this.player)) {
             given = this.rollReplacement(reward);
             if (given == null) {
                 this.refund();
                 Lang.CRATE_OPEN_REWARD_SOLD_OUT.getMessage().replace(reward.replacePlaceholders()).send(this.player);
-                return null;
+                return;
             }
             Lang.CRATE_OPEN_REWARD_REPLACED.getMessage()
                 .replace(Placeholders.GENERIC_NAME, reward.getName())
@@ -112,40 +108,8 @@ public abstract class AbstractOpening extends Runnable implements Opening {
                 .send(this.player);
         }
 
-        if (this.crate.hasPity() && this.crate.isPityReward(given)) {
-            CrateUser user = this.plugin.getUserManager().getUserData(this.player);
-            CrateData data = user.getCrateData(this.crate);
-            if (!data.isPityDone()) {
-                data.setPityDone(true); // natural drop or guarantee: the counter ends for good
-                this.plugin.getUserManager().scheduleSave(user);
-            }
-        }
-
         given.give(this.player);
         this.plugin.getPluginManager().callEvent(new CrateObtainRewardEvent(given, this.player));
-        return given;
-    }
-
-    /**
-     * BoxPvP pity: on the player's A-th spin without a pity reward, the first reward of this opening
-     * is swapped for a pity reward. Checked once per opening; when every pity reward is blocked
-     * (limits, permissions) the spin stays as rolled and the guarantee waits for the next one.
-     */
-    @NotNull
-    private Reward applyPity(@NotNull Reward reward) {
-        if (this.pityChecked) return reward;
-        this.pityChecked = true;
-
-        if (!this.crate.hasPity() || this.crate.isPityReward(reward)) return reward;
-
-        CrateData data = this.plugin.getUserManager().getUserData(this.player).getCrateData(this.crate);
-        if (data.isPityDone() || data.getPityCount() + 1 < this.crate.getPityOpenings()) return reward;
-
-        Reward pity = this.crate.rollPityReward(this.player);
-        if (pity == null) return reward;
-
-        Lang.CRATE_OPEN_PITY.getMessage().replace(pity.replacePlaceholders()).send(this.player);
-        return pity;
     }
 
     @Nullable
@@ -195,10 +159,6 @@ public abstract class AbstractOpening extends Runnable implements Opening {
 
             if (crate.hasOpenCooldown() && !crate.hasCooldownBypassPermission(player)) {
                 data.setOpenCooldown(crate.getOpenCooldown());
-            }
-
-            if (crate.hasPity() && !data.isPityDone()) {
-                data.setPityCount(data.getPityCount() + 1);
             }
 
             if (crate.hasMilestones()) {

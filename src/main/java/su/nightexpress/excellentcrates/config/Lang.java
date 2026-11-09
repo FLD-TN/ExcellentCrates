@@ -175,15 +175,6 @@ public class Lang extends CoreLang {
     public static final LangString COMMAND_RESET_COOLDOWN_USAGE = LangString.of("Command.ResetCooldown.Usage",
         "<player> <crate>");
 
-    public static final LangString COMMAND_RESET_PITY_DESC = LangString.of("Command.ResetPity.Desc",
-        "Đặt lại bộ đếm bảo hiểm crate của người chơi.");
-
-    public static final LangString COMMAND_RESET_PITY_USAGE = LangString.of("Command.ResetPity.Usage",
-        "<player> <crate>");
-
-    public static final LangText COMMAND_RESET_PITY_DONE = LangText.of("Command.ResetPity.Done",
-        success("Đã đặt lại bảo hiểm " + hl(CRATE_NAME) + " của " + hl(PLAYER_NAME)));
-
     public static final LangText COMMAND_RESET_COOLDOWN_DONE = LangText.of("Command.ResetCooldown.Done",
         success("Đã đặt lại thời gian chờ " + hl(CRATE_NAME) + " của " + hl(PLAYER_NAME)));
 
@@ -299,9 +290,6 @@ public class Lang extends CoreLang {
     public static final LangText CRATE_OPEN_REWARD_REPLACED = LangText.of("Crate.Open.Reward.Replaced",
         warn(hl(GENERIC_NAME) + " vừa hết lượt, bạn nhận " + REWARD_NAME + " thay thế"));
 
-    public static final LangText CRATE_OPEN_PITY = LangText.of("Crate.Open.Pity",
-        success("Bảo hiểm kích hoạt, bạn chắc chắn nhận " + REWARD_NAME));
-
     public static final LangText CRATE_OPEN_REWARD_SOLD_OUT = LangText.of("Crate.Open.Reward.SoldOut",
         warn(hl(REWARD_NAME) + " vừa hết lượt, bạn được hoàn lại key"));
 
@@ -364,9 +352,6 @@ public class Lang extends CoreLang {
 
     public static final LangString EDITOR_ENTER_VALUE = LangString.of("Editor.Enter.Value",
         enter("giá trị"));
-
-    public static final LangString EDITOR_ENTER_PITY_OPENINGS = LangString.of("Editor.Crate.Enter.PityOpenings",
-        enter("số lượt"));
 
     public static final LangString EDITOR_ENTER_SECONDS = LangString.of("Editor.Crate.Enter.Seconds",
         enter("số giây"));

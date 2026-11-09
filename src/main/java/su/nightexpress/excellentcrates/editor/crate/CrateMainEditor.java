@@ -13,7 +13,6 @@ import su.nightexpress.excellentcrates.config.Config;
 import su.nightexpress.excellentcrates.config.EditorLang;
 import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
-import su.nightexpress.excellentcrates.crate.impl.Reward;
 import su.nightexpress.excellentcrates.key.CrateKey;
 import su.nightexpress.nightcore.menu.MenuOptions;
 import su.nightexpress.nightcore.menu.MenuSize;
@@ -25,9 +24,7 @@ import su.nightexpress.nightcore.util.ItemUtil;
 import su.nightexpress.nightcore.util.NumberUtil;
 import su.nightexpress.nightcore.util.Players;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class CrateMainEditor extends EditorMenu<CratesPlugin, Crate> implements CrateEditor {
 
@@ -176,35 +173,6 @@ public class CrateMainEditor extends EditorMenu<CratesPlugin, Crate> implements 
                 this.saveSettings(viewer, crate, false);
                 return true;
             }).setSuggestions(plugin.getCurrencyManager().getCurrencyIds(), false);
-        });
-
-        this.addItem(Material.TOTEM_OF_UNDYING, EditorLang.CRATE_PITY, 31, (viewer, event, crate) -> {
-            if (event.getClick() == ClickType.DROP) {
-                crate.setPityRewardIds(new ArrayList<>());
-                this.saveSettings(viewer, crate, true);
-                return;
-            }
-            if (event.isShiftClick() && event.isLeftClick()) {
-                this.handleInput(viewer, Lang.EDITOR_ENTER_REWARD_ID, (dialog, input) -> {
-                    if (crate.getReward(input.getTextRaw()) == null) return true;
-                    List<String> ids = new ArrayList<>(crate.getPityRewardIds());
-                    ids.add(input.getTextRaw());
-                    crate.setPityRewardIds(ids);
-                    this.saveSettings(viewer, crate, false);
-                    return true;
-                }).setSuggestions(crate.getRewards().stream().map(Reward::getId).toList(), true);
-                return;
-            }
-            if (event.isRightClick()) {
-                this.handleInput(viewer, Lang.EDITOR_ENTER_PITY_OPENINGS, (dialog, input) -> {
-                    crate.setPityOpenings(input.asAnyInt(10));
-                    this.saveSettings(viewer, crate, false);
-                    return true;
-                });
-                return;
-            }
-            crate.setPityEnabled(!crate.isPityEnabled());
-            this.saveSettings(viewer, crate, true);
         });
 
         this.addItem(ItemUtil.getSkinHead(TEXTURE_PLACEMENT), EditorLang.CRATE_PLACEMENT_INFO, 38, (viewer, event, crate) -> {
