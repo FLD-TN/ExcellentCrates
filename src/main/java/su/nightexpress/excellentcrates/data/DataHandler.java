@@ -49,11 +49,13 @@ public class DataHandler extends AbstractUserDataHandler<CratesPlugin, CrateUser
     private final String                         rewardDataTable;
     private final Function<ResultSet, CrateUser> userFunction;
     private final Set<Reward>                    scheduledLimitSaves;
+    private final Set<Reward>                    scheduledLimitInserts;
 
     public DataHandler(@NotNull CratesPlugin plugin) {
         super(plugin);
         this.rewardDataTable = this.getTablePrefix() + "_reward_data";
         this.scheduledLimitSaves = ConcurrentHashMap.newKeySet();
+        this.scheduledLimitInserts = ConcurrentHashMap.newKeySet();
 
         this.userFunction = resultSet -> {
             try {
@@ -171,10 +173,41 @@ public class DataHandler extends AbstractUserDataHandler<CratesPlugin, CrateUser
     }
 
     @Override
+    protected void onLoad() {
+        super.onLoad();
+
+        // Global limit counts used to be saved only every 'Auto_Save_Interval' minutes (20 here): a crash lost
+        // them and limited rewards were given out again.
+        int interval = Math.max(1, Config.DATABASE_REWARD_LIMITS_SAVE_INTERVAL.get());
+        this.addTask(this.plugin.createAsyncTask(this::flushRewardLimits).setSecondsInterval(interval));
+    }
+
+    @Override
     public void onSave() {
-        this.saveRewardWinLimits(this.scheduledLimitSaves);
-        //this.plugin.debug("Saved " + this.scheduledLimitSaves.size() + " limit datas.");
-        this.scheduledLimitSaves.clear();
+        this.flushRewardLimits();
+    }
+
+    /**
+     * Writes pending global limit data: new rows first, then updates, on one thread in that order
+     * (an UPDATE that runs before its row was inserted changes nothing and the count is lost).
+     * Only the rewards taken out of the sets are written: one changed again meanwhile stays for the next flush
+     * (upstream cleared the whole set after saving and could drop such a change).
+     */
+    public synchronized void flushRewardLimits() {
+        if (!this.scheduledLimitInserts.isEmpty()) {
+            List<Reward> inserts = new ArrayList<>(this.scheduledLimitInserts);
+            this.scheduledLimitInserts.removeAll(inserts);
+            inserts.forEach(reward -> {
+                LimitData data = reward.getGlobalLimitData();
+                if (data != null) this.insertRewardLimitData(reward, data);
+            });
+        }
+
+        if (this.scheduledLimitSaves.isEmpty()) return;
+
+        Set<Reward> saves = new HashSet<>(this.scheduledLimitSaves);
+        this.scheduledLimitSaves.removeAll(saves);
+        this.saveRewardWinLimits(saves);
     }
 
     @Override
@@ -217,6 +250,13 @@ public class DataHandler extends AbstractUserDataHandler<CratesPlugin, CrateUser
 
     public void scheduleLimitSave(@NotNull Reward reward) {
         this.scheduledLimitSaves.add(reward);
+    }
+
+    /**
+     * Queues the first database row of a reward's global limit data (written before any update of it).
+     */
+    public void scheduleLimitInsert(@NotNull Reward reward) {
+        this.scheduledLimitInserts.add(reward);
     }
 
     @NotNull

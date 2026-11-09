@@ -366,9 +366,9 @@ public class Reward implements Weighted, Placeholder {
 
         // Port of 6.6.1 getRewardLimitOrCreate: global limit data must exist on win, otherwise global limits are never counted.
         if (globalLimits.isEnabled() && this.globalLimitData == null) {
-            LimitData created = LimitData.create();
-            this.globalLimitData = created;
-            this.plugin.runTaskAsync(task -> this.plugin.getData().insertRewardLimitData(this, created));
+            this.globalLimitData = LimitData.create();
+            // Inserted by the limit flush before the update below, never racing it on another thread.
+            this.plugin.getData().scheduleLimitInsert(this);
         }
 
         if (globalLimits.isEnabled() && this.globalLimitData != null) {

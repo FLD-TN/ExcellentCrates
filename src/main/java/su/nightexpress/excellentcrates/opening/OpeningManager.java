@@ -107,7 +107,31 @@ public class OpeningManager extends AbstractManager<CratesPlugin> {
 
 
     public void tickOpenings() {
-        this.getOpenings().forEach(Opening::tick);
+        // One broken opening must not stop the others (an exception used to abort this loop every tick)
+        // nor stay in the map forever (the player could never open a crate or nightcore menu again).
+        for (Opening opening : this.getOpenings()) {
+            try {
+                opening.tick();
+            }
+            catch (Throwable throwable) {
+                this.plugin.error("Crate opening of '" + opening.getPlayer().getName() + "' (" + opening.getCrate().getId() + ") failed and was stopped:");
+                throwable.printStackTrace();
+                this.discardOpening(opening);
+            }
+        }
+    }
+
+    /**
+     * Stops a failed opening (refunds it if it gave nothing, like an emergency stop) and makes sure it leaves the map.
+     */
+    private void discardOpening(@NotNull Opening opening) {
+        try {
+            opening.emergencyStop();
+        }
+        catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        this.openingsMap.remove(opening.getPlayer().getUniqueId(), opening);
     }
 
     public boolean isOpening(@NotNull Player player) {
@@ -152,39 +176,54 @@ public class OpeningManager extends AbstractManager<CratesPlugin> {
 
         InventoryOpening inventoryOpening = opening instanceof InventoryOpening io ? io : null;
 
-        this.openingsMap.putIfAbsent(player.getUniqueId(), opening);
+        // Must be in the map before the menu opens: OpeningListener only lets this opening's own menu open.
+        this.openingsMap.put(player.getUniqueId(), opening);
 
         if (inventoryOpening != null) {
             if (!instaRoll) {
                 InventoryOpeningMenu menu = inventoryOpening.getMenu();
                 if (menu.isViewer(player) || !menu.open(player) || player.getOpenInventory().getType() == InventoryType.CRAFTING) {
+                    // Nothing was taken yet (CrateManager takes after this returns true): just forget the opening,
+                    // otherwise the player stays 'opening' until relog and every nightcore menu is blocked.
+                    this.openingsMap.remove(player.getUniqueId(), opening);
                     menu.close(player);
                     return false;
                 }
             }
         }
 
-        if (inventoryOpening != null) {
-            InventoryOpeningMenu menu = inventoryOpening.getMenu();
-            Inventory inventory;
+        try {
+            if (inventoryOpening != null) {
+                InventoryOpeningMenu menu = inventoryOpening.getMenu();
+                Inventory inventory;
 
-            if (!instaRoll) {
-                inventory = player.getOpenInventory().getTopInventory();
+                if (!instaRoll) {
+                    inventory = player.getOpenInventory().getTopInventory();
+                }
+                else {
+                    inventory = menu.getOptions().createInventory();
+                }
+
+                inventoryOpening.setInventory(inventory);
+                inventoryOpening.postOpen();
+
+                if (instaRoll) opening.instaRoll();
             }
             else {
-                inventory = menu.getOptions().createInventory();
+                opening.run();
+                if (instaRoll) {
+                    opening.instaRoll();
+                }
             }
-
-            inventoryOpening.setInventory(inventory);
-            inventoryOpening.postOpen();
-
-            if (instaRoll) opening.instaRoll();
         }
-        else {
-            opening.run();
-            if (instaRoll) {
-                opening.instaRoll();
-            }
+        catch (Throwable throwable) {
+            this.plugin.error("Could not start crate opening of '" + player.getName() + "' (" + opening.getCrate().getId() + "):");
+            throwable.printStackTrace();
+            this.discardOpening(opening);
+
+            // Nothing is taken yet. If a reward already came out (instant opening failed half way),
+            // let CrateManager take the key/cost for it; otherwise nothing was opened.
+            return opening instanceof AbstractOpening abstractOpening && abstractOpening.getRewardsGiven() > 0 && !abstractOpening.isRefunded();
         }
 
         return true;

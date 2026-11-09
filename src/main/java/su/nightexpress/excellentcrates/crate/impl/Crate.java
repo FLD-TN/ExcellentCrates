@@ -69,7 +69,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
     private String      lastOpener;
     private String      lastReward;
 
-    private boolean loaded;
+    private volatile boolean loaded; // Set by the async limit loader on startup, read on the main thread.
 
     public Crate(@NotNull CratesPlugin plugin, @NotNull File file) {
         super(plugin, file);
@@ -179,7 +179,21 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
 
         for (String sId : config.getSection("Rewards.List")) {
             Reward reward = Reward.read(this.plugin, this, config, "Rewards.List." + sId, sId);
-            this.rewardMap.put(sId, reward);
+            // Keyed by the reward's own (lower case) ID like every lookup (getReward, limits, milestones,
+            // spinner PDC). Keying by the raw YAML key made 'Diamond_Sword' impossible to find: rolled in the
+            // animation but never given, and its limit data purged on every start.
+            if (this.rewardMap.containsKey(reward.getId())) {
+                // 'Abc' and 'abc' in one file: keep both (a save rewrites the whole list, a skipped one would be lost).
+                int index = 2;
+                String freeId;
+                do {
+                    freeId = reward.getId() + "_" + index++;
+                } while (this.rewardMap.containsKey(freeId) || config.contains("Rewards.List." + freeId));
+
+                this.plugin.warn("Crate '" + this.getId() + "': reward '" + sId + "' has the same ID as another reward (IDs ignore upper/lower case). Loaded as '" + freeId + "'.");
+                reward = Reward.read(this.plugin, this, config, "Rewards.List." + sId, freeId);
+            }
+            this.rewardMap.put(reward.getId(), reward);
         }
 
         this.setMilestonesRepeatable(config.getBoolean("Milestones.Repeatable"));
@@ -443,6 +457,17 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
         // BoxPvP: rewards are rolled by their own weight only (chance = weight / total weight).
         // Upstream rolls a rarity first (by rarity weight), then a reward inside it.
         return this.rollReward(this.getRewards(player, rarity));
+    }
+
+    /**
+     * @return A rolled reward the player can win, or null when there is none (all sold out / no permission).
+     * {@link #rollReward(Player)} must not be called with no winnable rewards: Rnd.getByWeight fails on an empty map.
+     */
+    @Nullable
+    public Reward tryRollReward(@Nullable Player player) {
+        List<Reward> rewards = this.getRewards(player, null);
+        rewards.removeIf(reward -> !reward.isRollable());
+        return rewards.isEmpty() ? null : this.rollReward(rewards);
     }
 
     @NotNull
@@ -784,7 +809,7 @@ public class Crate extends AbstractFileData<CratesPlugin> implements Placeholder
     }
 
     public void removeReward(@NotNull String id) {
-        this.rewardMap.remove(id);
+        this.rewardMap.remove(id.toLowerCase());
     }
 
     @NotNull

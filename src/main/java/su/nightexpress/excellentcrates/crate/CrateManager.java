@@ -58,6 +58,9 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     private final Map<WorldPos, Crate> crateByPosMap;
     private final Map<UUID, Map<String, Integer>> batchRewards;
 
+    /** Read-only copy of the loaded crates for async tasks (effects, limit loading): crateMap is a plain HashMap. */
+    private volatile List<Crate> crateSnapshot = List.of();
+
     private MilestonesMenu    milestonesMenu;
     private OpeningAmountMenu amountMenu;
 
@@ -80,11 +83,13 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         this.loadUI();
         this.plugin.runTaskAsync(task -> {
             this.loadRewardLimits();
-            this.getCrates().forEach(crate -> crate.setLoaded(true));
+            this.crateSnapshot.forEach(crate -> crate.setLoaded(true));
         });
 
         if (this.plugin.hasHolograms()) {
-            this.addTask(plugin.createAsyncTask(this::updateCrateHolograms).setSecondsInterval(Config.CRATE_HOLOGRAM_UPDATE_INTERVAL.get()));
+            // Main thread (was async): the refresh reads blocks and runs PlaceholderAPI (e.g. the key count reads
+            // the player's inventory), neither is safe off the main thread. It's a few packets every few seconds.
+            this.addTask(plugin.createTask(this::updateCrateHolograms).setSecondsInterval(Config.CRATE_HOLOGRAM_UPDATE_INTERVAL.get()));
         }
 
         this.addTask(plugin.createAsyncTask(this::playCrateEffects).setTicksInterval(1L));
@@ -180,6 +185,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     private void loadCrate(@NotNull Crate crate) {
         if (crate.load()) {
             this.crateMap.put(crate.getId(), crate);
+            this.refreshCrateSnapshot();
         }
         else {
             this.removeCratePositions(crate);
@@ -214,7 +220,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
         });
         if (map.isEmpty()) return;
 
-        this.getCrates().forEach(crate -> {
+        this.crateSnapshot.forEach(crate -> {
             var limitMap = map.get(crate.getId());
             if (limitMap == null) return;
 
@@ -256,6 +262,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             crate.clear();
         });
         this.crateMap.clear();
+        this.refreshCrateSnapshot();
         this.crateByPosMap.clear();
         this.openCooldown.clear();
 
@@ -321,6 +328,10 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     @NotNull
     public List<String> getCrateIds(boolean keyOnly) {
         return this.getCrates().stream().filter(crate -> crate.isKeyRequired() || !keyOnly).map(Crate::getId).toList();
+    }
+
+    private void refreshCrateSnapshot() {
+        this.crateSnapshot = List.copyOf(this.crateMap.values());
     }
 
     @NotNull
@@ -402,7 +413,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     }
 
     public void updateCrateHolograms() {
-        this.getCrates().forEach(Crate::updateHologram);
+        this.crateSnapshot.forEach(Crate::updateHologram);
     }
 
     @NotNull
@@ -454,6 +465,7 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             crate.clear();
             this.plugin.runTaskAsync(task -> plugin.getData().deleteRewardLimitData(crate));
             this.crateMap.remove(crate.getId());
+            this.refreshCrateSnapshot();
             this.removeCratePositions(crate);
             return true;
         }
@@ -686,24 +698,34 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
             return false;
         }
 
+        AbstractOpening abstractOpening = opening instanceof AbstractOpening ao ? ao : null;
+
+        // An instant opening already ran inside startOpening. If it ended with a refund (sold out), nothing was
+        // taken yet and refund() gave nothing back: take nothing now either, nothing was opened.
+        if (abstractOpening != null && abstractOpening.isRefunded()) {
+            return false;
+        }
+
         if (!settings.isForce()) {
             // Take costs (skipped for bypass players, so nothing is refunded to them either).
             if (!crate.hasCostBypassPermisssion(player)) {
                 crate.getOpenCostMap().forEach((currency, amount) -> currency.getHandler().take(player, amount));
-                if (opening instanceof AbstractOpening abstractOpening) {
-                    abstractOpening.setCostPaid(true);
-                }
+                if (abstractOpening != null) abstractOpening.setCostPaid(true);
             }
 
-            // Take key
+            // Take key. Marked as taken only if one was really removed, so a refund can never create a key.
             if (crate.isKeyRequired() && key != null) {
+                int before = this.plugin.getKeyManager().getKeysAmount(player, key);
                 this.plugin.getKeyManager().takeKey(player, key, 1);
+                int after = this.plugin.getKeyManager().getKeysAmount(player, key);
+                if (abstractOpening != null && after < before) abstractOpening.setKeyTaken(true);
             }
 
             // Take crate item stack
             ItemStack item = source.getItem();
-            if (item != null) {
+            if (item != null && item.getAmount() > 0) {
                 item.setAmount(item.getAmount() - 1);
+                if (abstractOpening != null) abstractOpening.setItemTaken(true);
             }
         }
 
@@ -784,23 +806,40 @@ public class CrateManager extends AbstractManager<CratesPlugin> {
     }
 
     public void playCrateEffects() {
-        this.getCrates().forEach(crate -> {
-            if (crate.getEffectModel() == EffectModel.NONE) return;
+        // Async every tick: crates from the snapshot (never the live HashMap), online players copied once per
+        // tick instead of once per crate position, squared distance instead of sqrt.
+        List<Crate> crates = this.crateSnapshot;
+        if (crates.isEmpty()) return;
 
-            UniParticle particle = crate.getEffectParticle();
-            AbstractEffect effect = crate.getEffectModel().getEffect();
+        List<Player> online = new ArrayList<>(this.plugin.getServer().getOnlinePlayers());
+        if (!online.isEmpty()) {
+            double distance = Config.CRATE_EFFECTS_VISIBILITY_DISTANCE.get();
+            double distanceSquared = distance * distance;
 
-            crate.getBlockPositions().forEach(worldPos -> {
-                if (!worldPos.isChunkLoaded()) return;
+            crates.forEach(crate -> {
+                if (crate.getEffectModel() == EffectModel.NONE) return;
 
-                Location location = worldPos.toLocation();
-                if (location == null) return;
+                UniParticle particle = crate.getEffectParticle();
+                AbstractEffect effect = crate.getEffectModel().getEffect();
 
-                CrateUtils.getPlayersForEffects(location).forEach(player -> {
-                    effect.step(LocationUtil.setCenter3D(location), particle, player);
+                crate.getBlockPositions().forEach(worldPos -> {
+                    if (!worldPos.isChunkLoaded()) return;
+
+                    Location location = worldPos.toLocation();
+                    if (location == null) return;
+
+                    World world = location.getWorld();
+                    LocationUtil.setCenter3D(location);
+
+                    for (Player player : online) {
+                        if (player.getWorld() != world) continue;
+                        if (player.getLocation().distanceSquared(location) > distanceSquared) continue;
+
+                        effect.step(location.clone(), particle, player);
+                    }
                 });
             });
-        });
+        }
 
         Arrays.asList(EffectModel.values()).forEach(model -> model.getEffect().addStep());
     }

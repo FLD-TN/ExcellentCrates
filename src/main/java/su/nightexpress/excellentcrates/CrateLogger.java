@@ -28,12 +28,18 @@ public class CrateLogger {
     private final CratesPlugin          plugin;
     private final BlockingQueue<String> queue;
 
+    /** Lines kept while the file can't be written; older lines are dropped past this, so RAM stays bounded. */
+    private static final int  QUEUE_CAPACITY = 10_000;
+    /** After a write error, wait this long before trying the file again (no thread restart per log line). */
+    private static final long RETRY_DELAY_MS = 30_000L;
+
     private Thread           workerThread;
     private volatile boolean running;
+    private volatile long    failedAt;
 
     public CrateLogger(@NotNull CratesPlugin plugin) {
         this.plugin = plugin;
-        this.queue = new LinkedBlockingQueue<>();
+        this.queue = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
     }
 
     public void logReward(@NotNull Player player, @NotNull Reward reward) {
@@ -56,13 +62,18 @@ public class CrateLogger {
         }
         if (Config.LOGS_TO_FILE.get()) {
             String date = LocalDateTime.now().format(Config.LOGS_DATE_FORMAT.get());
-            this.queue.offer("[" + date + "] " + text);
+            String line = "[" + date + "] " + text;
+            // Bounded queue: when full (file not writable for a long time) drop the oldest line, never grow forever.
+            while (!this.queue.offer(line)) {
+                this.queue.poll();
+            }
             this.startWorker();
         }
     }
 
     private synchronized void startWorker() {
         if (this.running) return;
+        if (this.failedAt > 0L && System.currentTimeMillis() - this.failedAt < RETRY_DELAY_MS) return;
 
         Path path = Path.of(this.plugin.getDataFolder().getPath(), Config.FILE_LOGS);
         this.running = true;
@@ -87,10 +98,16 @@ public class CrateLogger {
             writer.flush();
         }
         catch (IOException exception) {
-            exception.printStackTrace();
+            this.failedAt = System.currentTimeMillis();
+            this.plugin.error("Could not write '" + Config.FILE_LOGS + "' (retry in " + (RETRY_DELAY_MS / 1000L) + "s): " + exception.getMessage());
         }
         catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
+        }
+        finally {
+            // The worker is gone (error or stop): let the next log line start a new one. Before, 'running'
+            // stayed true after an error, so no worker ever started again and the queue grew without limit.
+            this.running = false;
         }
     }
 

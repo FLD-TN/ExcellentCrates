@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentcrates.CratesPlugin;
-import su.nightexpress.excellentcrates.api.event.CrateObtainRewardEvent;
 import su.nightexpress.excellentcrates.config.Config;
+import su.nightexpress.excellentcrates.config.Lang;
 import su.nightexpress.excellentcrates.crate.impl.CrateSource;
 import su.nightexpress.excellentcrates.crate.impl.Reward;
 import su.nightexpress.excellentcrates.hologram.HologramHandler;
@@ -67,11 +67,20 @@ public class BasicOpening extends AbstractOpening {
         this.setRefundable(false);
         this.setHasRewardAttempts(true);
 
-        Reward reward = this.getCrate().rollReward(this.player);
-        reward.give(this.player);
-
-        CrateObtainRewardEvent rewardEvent = new CrateObtainRewardEvent(reward, player);
-        plugin.getPluginManager().callEvent(rewardEvent);
+        // Rewards were checked on open, but they can sell out before this tick (global limits): rolling an
+        // empty list throws every tick and the opening never ends. Refund and finish instead.
+        Reward reward = this.getCrate().tryRollReward(this.player);
+        if (reward == null) {
+            Lang.CRATE_OPEN_ERROR_NO_REWARDS.getMessage().replace(this.getCrate().replacePlaceholders()).send(this.player);
+            if (this.rewardsGiven == 0) this.refund();
+            this.rolled = true;
+            return;
+        }
+        this.giveReward(reward); // Gives, counts and calls CrateObtainRewardEvent.
+        if (this.refunded) {
+            this.rolled = true;
+            return;
+        }
 
         Block block = this.getSource().getBlock();
         if (this.visuals && Config.CRATE_DISPLAY_REWARD_ABOVE_BLOCK.get() && block != null) {

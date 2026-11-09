@@ -70,12 +70,29 @@ abstract class ManageCommand extends AbstractCommand<CratesPlugin> {
         int amount = Math.abs(result.getInt(4, 1));
         if (amount <= 0) return;
 
-        CrateUser user = plugin.getUserManager().getUserData(result.getArg(2));
-        if (user == null) {
-            this.errorPlayer(sender);
+        String name = result.getArg(2);
+        Player online = Players.getPlayer(name);
+        if (online != null) {
+            this.apply(sender, result, plugin.getUserManager().getUserData(online), key, amount);
             return;
         }
 
+        // Offline player (e.g. vote keys): the user data is read from the database off the main thread,
+        // then the keys are changed on the main thread. Upstream read it on the main thread (lag per vote).
+        this.plugin.getUserManager().manageUserSynchronized(name, fetched -> {
+            if (fetched == null) {
+                this.errorPlayer(sender);
+                return;
+            }
+
+            // Two commands for the same player can load two copies at once; only the cached one is saved
+            // and seen later, so always change that one (otherwise one of the two changes is lost).
+            CrateUser cached = this.plugin.getUserManager().getLoaded(fetched.getId());
+            this.apply(sender, result, cached != null ? cached : fetched, key, amount);
+        });
+    }
+
+    private void apply(@NotNull CommandSender sender, @NotNull CommandResult result, @NotNull CrateUser user, @NotNull CrateKey key, int amount) {
         this.manage(user, key, amount);
         if (!result.hasFlag(CommandFlags.NO_SAVE)) {
             this.plugin.getUserManager().saveAsync(user);

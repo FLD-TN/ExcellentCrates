@@ -1,6 +1,10 @@
 package su.nightexpress.excellentcrates.crate.listener;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -25,6 +29,8 @@ import su.nightexpress.excellentcrates.crate.CrateManager;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 import su.nightexpress.excellentcrates.hologram.HologramHandler;
 import su.nightexpress.excellentcrates.hooks.impl.ItemsAdderHook;
+import su.nightexpress.excellentcrates.hooks.impl.PlaceholderHook;
+import su.nightexpress.nightcore.util.Plugins;
 import su.nightexpress.excellentcrates.util.ClickType;
 import su.nightexpress.excellentcrates.util.InteractType;
 import su.nightexpress.nightcore.manager.AbstractListener;
@@ -51,11 +57,54 @@ public class CrateListener extends AbstractListener<CratesPlugin> {
         this.crateManager.removePreviewCooldown(event.getPlayer());
         this.crateManager.removeOpenClickCooldown(event.getPlayer());
         this.adventureFix.remove(event.getPlayer().getUniqueId());
+        if (Plugins.hasPlaceholderAPI()) {
+            PlaceholderHook.handleQuit(event.getPlayer());
+        }
 
         HologramHandler hologramHandler = this.plugin.getHologramHandler();
         if (hologramHandler != null) {
             hologramHandler.handleQuit(event.getPlayer());
         }
+    }
+
+    /*
+     * The client drops every entity on respawn / world change (and on a far teleport its chunks unload), but the
+     * hologram handler still thought it had shown the hologram to that player, so it only sent text updates and
+     * the hologram stayed invisible until the player walked out of range and back.
+     * Forget the player one tick later (after the respawn/teleport packets went out): the next refresh spawns it
+     * again. Re-spawning an entity ID the client still has just replaces it, so a needless reset is harmless.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onHologramRespawn(PlayerRespawnEvent event) {
+        this.resetHolograms(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onHologramWorldChange(PlayerChangedWorldEvent event) {
+        this.resetHolograms(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onHologramTeleport(PlayerTeleportEvent event) {
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (from.getWorld() != to.getWorld()) return; // PlayerChangedWorldEvent handles it.
+        if (from.distanceSquared(to) < HOLOGRAM_RESET_TELEPORT_DISTANCE_SQUARED) return;
+
+        this.resetHolograms(event.getPlayer());
+    }
+
+    private static final double HOLOGRAM_RESET_TELEPORT_DISTANCE_SQUARED = 64D * 64D;
+
+    private void resetHolograms(@NotNull Player player) {
+        if (this.plugin.getHologramHandler() == null) return;
+
+        this.plugin.runTask(task -> {
+            HologramHandler hologramHandler = this.plugin.getHologramHandler();
+            if (hologramHandler != null) {
+                hologramHandler.handleQuit(player);
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGH)

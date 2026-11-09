@@ -42,6 +42,13 @@ public class Config {
         "[*] Use with caution on multiple servers connected to the same database, but with different crates."
     );
 
+    public static final ConfigValue<Integer> DATABASE_REWARD_LIMITS_SAVE_INTERVAL = ConfigValue.create("Database.Reward_Limits_Save_Interval",
+        10,
+        "Sets how often (in seconds) changed reward global limit data is saved to the database.",
+        "It's also saved on shutdown/reload. A low value means less lost limit data if the server crashes.",
+        "[Before: saved only every 'Auto_Save_Interval' minutes]"
+    );
+
     public static final ConfigValue<Boolean> MILESTONES_ENABLED = ConfigValue.create("Milestones.Enabled",
         true,
         "Sets whether or not Milestones feature is enabled (globally)."

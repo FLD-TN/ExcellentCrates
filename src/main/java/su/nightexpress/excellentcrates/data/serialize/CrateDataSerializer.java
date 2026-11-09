@@ -17,7 +17,11 @@ public class CrateDataSerializer implements JsonSerializer<CrateData>, JsonDeser
         long openCooldown = object.get("openCooldown").getAsLong();
         int openings = object.get("openings").getAsInt();
         int milestones = object.get("milestones").getAsInt();
-        Map<String, LimitData> winDataMap = context.deserialize(object.get("winDataMap"), new TypeToken<Map<String, Map<String, LimitData>>>(){}.getType());
+        // Upstream read this as Map<String, Map<String, LimitData>>: every saved player limit ({"amount":1,...})
+        // was parsed as a map of LimitData and failed ("Not a JSON Object"), so the user data could not load.
+        JsonElement winData = object.get("winDataMap");
+        Map<String, LimitData> winDataMap = winData == null || winData.isJsonNull() ? null :
+            context.deserialize(winData, new TypeToken<Map<String, LimitData>>(){}.getType());
 
         return new CrateData(openCooldown, openings, milestones, winDataMap);
     }

@@ -35,7 +35,10 @@ public abstract class AbstractOpening extends Runnable implements Opening {
     protected boolean refundable;
     protected boolean hasRewardAttempts;
     protected boolean costPaid;
+    protected boolean keyTaken;
+    protected boolean itemTaken;
     protected boolean refunded;
+    protected int     rewardsGiven;
 
     public AbstractOpening(@NotNull CratesPlugin plugin, @NotNull Player player,
                            @NotNull CrateSource source, @Nullable CrateKey key) {
@@ -94,12 +97,19 @@ public abstract class AbstractOpening extends Runnable implements Opening {
      * the player can still win (same rarity first). BoxPvP fix, upstream (6.6.1, 7.x) gives it anyway.
      */
     public void giveReward(@NotNull Reward reward) {
+        // A refunded opening is over: the key/item/cost are back, nothing else may come out of it.
+        if (this.refunded) return;
+
         Reward given = reward;
         if (!reward.canWin(this.player)) {
-            given = this.rollReplacement(reward);
+            given = this.rollReplacement();
             if (given == null) {
-                this.refund();
                 Lang.CRATE_OPEN_REWARD_SOLD_OUT.getMessage().replace(reward.replacePlaceholders()).send(this.player);
+                // Refund only if this opening gave nothing yet: an opening with several rewards (hacking_x4,
+                // selective_3) that already paid out one of them must not hand the key back as well.
+                if (this.rewardsGiven == 0) {
+                    this.refund();
+                }
                 return;
             }
             Lang.CRATE_OPEN_REWARD_REPLACED.getMessage()
@@ -109,25 +119,28 @@ public abstract class AbstractOpening extends Runnable implements Opening {
         }
 
         given.give(this.player);
+        this.rewardsGiven++;
         this.plugin.getPluginManager().callEvent(new CrateObtainRewardEvent(given, this.player));
     }
 
     @Nullable
-    private Reward rollReplacement(@NotNull Reward reward) {
-        if (this.crate.hasRewards(this.player)) {
-            return this.crate.rollReward(this.player);
-        }
-        return null;
+    private Reward rollReplacement() {
+        return this.crate.tryRollReward(this.player);
     }
 
-    private void refund() {
+    /**
+     * Gives back only what was really taken for this opening (key, crate item, cost). An instant opening runs
+     * inside OpeningManager#startOpening, before CrateManager takes anything: then nothing is given back here
+     * and CrateManager sees {@link #isRefunded()} and takes nothing either.
+     */
+    protected void refund() {
         if (this.refunded) return;
         this.refunded = true;
 
-        if (this.key != null) {
+        if (this.key != null && this.keyTaken) {
             this.plugin.getKeyManager().giveKey(this.player, this.key, 1);
         }
-        if (this.source.getItem() != null) {
+        if (this.itemTaken) {
             Players.addItem(this.player, this.crate.getItem());
         }
         // Port of 6.4.0: refund only the cost that was actually paid (not for cost bypass players).
@@ -140,13 +153,15 @@ public abstract class AbstractOpening extends Runnable implements Opening {
 
     @Override
     protected final void onStop() {
-        if (this.isRefundable()) {
+        // Never refund an opening that already gave a reward (e.g. emergency stop right after a selection was given).
+        if (this.isRefundable() && this.rewardsGiven == 0) {
             if ((this.isEmergency() && !this.hasRewardRolled()) || !this.hasRewardAttempts()) {
                 this.refund();
             }
         }
 
-        if (this.isCompleted()) {
+        // A refunded opening didn't happen: no opening count, milestone or cooldown for it.
+        if (this.isCompleted() && !this.refunded) {
             this.crate.setLastOpener(player.getName());
 
             CrateUser user = this.plugin.getUserManager().getUserData(player);
@@ -155,7 +170,9 @@ public abstract class AbstractOpening extends Runnable implements Opening {
             data.addOpenings(1);
 
             if (crate.hasOpenCooldown() && !crate.hasCooldownBypassPermission(player)) {
-                data.setOpenCooldown(crate.getOpenCooldown());
+                // Upstream 5.3.3 stored the raw seconds as the end date (= year 1970), so timed cooldowns never
+                // worked. setCooldown turns seconds into an end timestamp (-1 stays one-time / permanent).
+                data.setCooldown(crate.getOpenCooldown());
             }
 
             if (crate.hasMilestones()) {
@@ -205,6 +222,22 @@ public abstract class AbstractOpening extends Runnable implements Opening {
 
     public void setCostPaid(boolean costPaid) {
         this.costPaid = costPaid;
+    }
+
+    public void setKeyTaken(boolean keyTaken) {
+        this.keyTaken = keyTaken;
+    }
+
+    public void setItemTaken(boolean itemTaken) {
+        this.itemTaken = itemTaken;
+    }
+
+    public boolean isRefunded() {
+        return this.refunded;
+    }
+
+    public int getRewardsGiven() {
+        return this.rewardsGiven;
     }
 
     @Override

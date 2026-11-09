@@ -45,6 +45,36 @@ public class Creator {
         this.removePreviewRarityRows();
         this.removeEmptyCrates();
         this.useCrateNameInPackHolograms();
+        this.guaranteeHackingReward();
+    }
+
+    private static final String HACKING_REWARD_OLD = "[run_reward] id:\"default\" name:\"reward1\" delay:\"31\" slots:\"10\" mode:\"independent\" chance:\"10.0\"";
+    private static final String HACKING_REWARD_NEW = "[run_reward] id:\"default\" name:\"reward1\" delay:\"31\" slots:\"10\" mode:\"independent\" chance:\"100.0\"";
+
+    /**
+     * One-time migration: in hacking_x4 every reward slot had a 10% chance, so 0.9^4 = ~65.6% of the openings
+     * gave nothing and still used the key. The first reward slot is now always run (the other three stay
+     * 10% bonus slots). Only the exact original line is changed; an edited line is left alone.
+     */
+    private void guaranteeHackingReward() {
+        FileConfig config = this.plugin.getConfig();
+        String flag = "Default_Pack.Hacking_Guaranteed_Reward";
+        if (config.getBoolean(flag)) return;
+
+        File file = new File(plugin.getDataFolder() + Config.DIR_OPENINGS, "hacking_x4.yml");
+        if (file.exists()) {
+            FileConfig opening = new FileConfig(file);
+            String path = "Settings.ScriptRunner.OnStart";
+            List<String> scripts = new ArrayList<>(opening.getStringList(path));
+            if (scripts.contains(HACKING_REWARD_OLD)) {
+                scripts.replaceAll(line -> line.equals(HACKING_REWARD_OLD) ? HACKING_REWARD_NEW : line);
+                opening.set(path, scripts);
+                opening.saveChanges();
+                this.plugin.info("Opening 'hacking_x4': first reward slot is now always run (was 10%, ~65% of openings gave nothing).");
+            }
+        }
+        config.set(flag, true);
+        config.saveChanges();
     }
 
     /** Crate name lines the 4.x pack wrote into its hologram templates (migrated by Crate#onLoad to config.yml). */

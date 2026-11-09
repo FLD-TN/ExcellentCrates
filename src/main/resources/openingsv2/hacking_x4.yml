@@ -15,7 +15,7 @@ Settings:
     - ''
     - '[run_animation] id:"pre_error" name:"pre_error1" delay:"0" slots:"10" mode:"independent" chance:"100.0"'
     - '[run_animation] id:"error" name:"error1" delay:"31" slots:"10" mode:"independent" chance:"100.0"'
-    - '[run_reward] id:"default" name:"reward1" delay:"31" slots:"10" mode:"independent" chance:"10.0"'
+    - '[run_reward] id:"default" name:"reward1" delay:"31" slots:"10" mode:"independent" chance:"100.0"'
     - ''
     - '[run_animation] id:"pre_error" name:"pre_error2" delay:"20" slots:"16" mode:"independent" chance:"100.0"'
     - '[run_animation] id:"error" name:"error2" delay:"51" slots:"16" mode:"independent" chance:"100.0"'

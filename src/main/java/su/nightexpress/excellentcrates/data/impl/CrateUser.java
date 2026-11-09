@@ -10,6 +10,7 @@ import su.nightexpress.nightcore.database.AbstractUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CrateUser extends AbstractUser<CratesPlugin> {
 
@@ -34,9 +35,23 @@ public class CrateUser extends AbstractUser<CratesPlugin> {
                      @NotNull Map<String, Integer> keysOnHold,
                      @NotNull Map<String, CrateData> crateDataMap) {
         super(plugin, uuid, name, dateCreated, lastOnline);
-        this.keys = keys;
-        this.keysOnHold = keysOnHold;
-        this.crateDataMap = new HashMap<>(crateDataMap);
+        // Concurrent maps: user data is saved (serialized) on async threads while the main thread changes it.
+        // A plain HashMap could throw ConcurrentModificationException there and the save failed.
+        this.keys = concurrentCopy(keys);
+        this.keysOnHold = concurrentCopy(keysOnHold);
+        this.crateDataMap = concurrentCopy(crateDataMap);
+    }
+
+    /** Copy into a ConcurrentHashMap, dropping null keys/values it can't hold (null map = empty). */
+    @NotNull
+    public static <V> Map<String, V> concurrentCopy(@Nullable Map<String, V> map) {
+        Map<String, V> copy = new ConcurrentHashMap<>();
+        if (map != null) {
+            map.forEach((key, value) -> {
+                if (key != null && value != null) copy.put(key, value);
+            });
+        }
+        return copy;
     }
 
     @NotNull

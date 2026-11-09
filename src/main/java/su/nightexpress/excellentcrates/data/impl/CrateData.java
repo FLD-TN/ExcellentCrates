@@ -20,11 +20,11 @@ public class CrateData {
         this(0, 0, 0, new HashMap<>());
     }
 
-    public CrateData(long openCooldown, int openings, int milestone, @NotNull Map<String, LimitData> rewardDataMap) {
+    public CrateData(long openCooldown, int openings, int milestone, @Nullable Map<String, LimitData> rewardDataMap) {
         this.openCooldown = openCooldown;
         this.openings = openings;
         this.milestone = milestone;
-        this.rewardDataMap = rewardDataMap;
+        this.rewardDataMap = CrateUser.concurrentCopy(rewardDataMap); // Saved async, changed on the main thread.
     }
 
     public void removeCooldown() {
